@@ -16,8 +16,8 @@ first-load JavaScript, lessons as narrated scenes instead of video.
 | M4 | MCQ, SRS, drill generators, board questions, method sheets | done |
 | M5 | Exam centre, timed mocks, readiness and predicted GPA | done |
 | M6 | Study plan, Focus timer, streaks, notices + web push | done |
-| M7 | AI tutor Edge Function, photo marking, rate limits | next |
-| M8 | Parent link, teacher dashboard, CSV export, analytics | |
+| M7 | AI tutor Edge Function, photo marking, rate limits | done |
+| M8 | Parent link, teacher dashboard, CSV export, analytics | next |
 | M9 | Performance, accessibility, Playwright e2e | |
 
 ## Run it
@@ -71,6 +71,18 @@ https://albhi07.github.io/alo/ (Settings → Pages → Source must be "GitHub Ac
 - **Exam dates are data**: `src/data/exam.ts` is the offline fallback; the live copy comes
   from the `exam_config` and `routine` tables. Seeded 2027 dates are flagged
   **unverified** until an admin checks them against the board PDF.
+- **AI tutor** (`supabase/functions/tutor`, screen `/tutor`): online only, for signed-in
+  students. The Edge Function calls Claude (`claude-sonnet-5-5`) with four tools over
+  Alo's own data (`search_lessons`, `get_chapter_notes`, `get_student_progress`,
+  `get_method_sheet`), and marks photos of handwritten creative answers part by part
+  against the question's rubric (marks per part come from the rubric, never the model).
+  Daily limits per student (20 questions, 5 photos; `TUTOR_DAILY_MESSAGES` /
+  `TUTOR_DAILY_PHOTOS`) and token use are kept in `tutor_usage`; a failed call gives the
+  unit back. The tutor is closed while any routine paper is being written. Photos go to
+  the private `tutor-photos` bucket, one folder per student. The pure logic lives in
+  `supabase/functions/_shared/tutor-logic.ts` and is unit-tested with the app.
+  To switch it on: `supabase secrets set ANTHROPIC_API_KEY=...` (in your terminal, not in
+  chat) and `supabase functions deploy tutor`.
 - **PWA**: vite-plugin-pwa precaches the app shell and the Bengali/Latin font subsets.
   supabase-js is excluded from precache and loaded only when needed.
 

@@ -122,7 +122,6 @@
   },
   "exam": {
     "title": "Exam centre",
-    "soon": "Model tests and the routine are coming here.",
     "routine": "Exam routine",
     "predicted": "Predicted GPA",
     "noData": "Answer some questions or take a model test to see a prediction.",
@@ -153,7 +152,6 @@
   },
   "focus": {
     "title": "Focus",
-    "soon": "The Pomodoro timer is coming here.",
     "timer": "Focus timer",
     "mode": "Timer length",
     "modeLabel": "{{work}} min + {{rest}} break",
@@ -178,7 +176,58 @@
   },
   "tutor": {
     "title": "AI tutor",
-    "soon": "A tutor you can ask questions is coming here. It needs internet."
+    "intro": "Ask about anything in your SSC syllabus, in Bangla or English, or send a photo of a written creative answer to get it marked. The tutor explains and guides; it can make mistakes, so check with your textbook.",
+    "newChat": "New chat",
+    "notConfigured": "The tutor isn't switched on for this copy of the app yet (no online database). Everything else works.",
+    "signIn": "Sign in to use the tutor. It's free; the daily limit keeps it free for everyone.",
+    "signInButton": "Sign in",
+    "left": "Left today: {{messages}} questions, {{photos}} photos",
+    "empty": "Try: \"Explain photosynthesis in simple words\" or \"How do I start part (c) of a CQ?\"",
+    "you": "You said:",
+    "tutor": "Tutor said:",
+    "photo": "Photo of my answer",
+    "photoSent": "Please mark my answer",
+    "thinking": "The tutor is thinking…",
+    "marking": "Marking your answer…",
+    "compose": "Ask the tutor",
+    "modeLabel": "What do you want to do?",
+    "mode": {
+      "ask": "Ask a question",
+      "mark": "Mark my answer"
+    },
+    "subject": "Subject",
+    "anySubject": "Any subject",
+    "question": "Your question",
+    "placeholder": "Write your question…",
+    "send": "Send",
+    "fromQuestion": "Marking against the creative question you opened, with its rubric.",
+    "photoHow": "Write your answer on paper, then take one clear photo of the page in good light.",
+    "photoPick": "Photo of your answer",
+    "questionOptional": "The question (optional)",
+    "questionHint": "Type or paste the question so the marking is fair",
+    "markIt": "Mark my answer",
+    "privacy": "Your chats and photos are saved to your account so you can continue later. They are not used to train AI. Don't share personal details.",
+    "score": "Marks: {{got}} / {{max}}",
+    "notLegible": "Much of the page was hard to read. Try a sharper photo in better light.",
+    "perPart": "Marks for each part",
+    "part": "Part",
+    "marks": "Marks",
+    "missing": "What was missing",
+    "fullMarks": "Full marks",
+    "nextStep": "Next step:",
+    "err": {
+      "sign_in": "Please sign in again to use the tutor.",
+      "offline": "You're offline. The tutor needs internet.",
+      "not_configured": "The tutor isn't switched on for this copy of the app yet.",
+      "limit": "You've used today's tutor limit. It resets at midnight (Bangladesh time). Keep practising in the meantime!",
+      "exam_hours": "The tutor is closed while an SSC paper is being written. Good luck!",
+      "busy": "The tutor is busy right now. Try again in a minute.",
+      "model": "The tutor couldn't answer that. Try asking in a different way.",
+      "network": "Couldn't reach the tutor. Check your internet and try again.",
+      "too_long": "That's too long. Keep it under 2000 characters.",
+      "bad_photo": "That photo couldn't be used. Try a JPG or PNG photo.",
+      "server": "Something went wrong. Try again in a minute."
+    }
   },
   "settings": {
     "title": "Settings",
@@ -275,7 +324,8 @@
     "modelFor": "({{part}}) Model answer",
     "rubric": "How marks are given",
     "points": "{{n}} mark(s):",
-    "model": "Model answer"
+    "model": "Model answer",
+    "markWithTutor": "Mark my answer with the tutor"
   },
   "admin": {
     "title": "Content admin",

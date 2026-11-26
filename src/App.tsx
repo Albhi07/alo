@@ -25,7 +25,7 @@ const Focus = lazy(() => import('./pages/Focus'))
 const Plan = lazy(() => import('./pages/Plan'))
 const Notices = lazy(() => import('./pages/Notices'))
 const Settings = lazy(() => import('./pages/Settings'))
-const Placeholder = lazy(() => import('./pages/Placeholder'))
+const Tutor = lazy(() => import('./pages/Tutor'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 /** Until this device has a profile, send the student to the welcome screen. */
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
       { path: '/focus', element: <Focus /> },
       { path: '/plan', element: <Plan /> },
       { path: '/notices', element: <Notices /> },
-      { path: '/tutor', element: <Placeholder section="tutor" needsOnline /> },
+      { path: '/tutor', element: <Tutor /> },
       { path: '/settings', element: <Settings /> },
       {
         path: '/admin', element: <AdminLayout />,
