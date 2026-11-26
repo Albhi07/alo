@@ -10,10 +10,11 @@ import { FlameIcon } from '../components/icons'
 export default function Home() {
   const { t, lang, date, n } = useT()
   const profile = useProfile()
-  const { routine } = useExamData()
+  const { routine: allRoutine, config } = useExamData()
   if (!profile) return null
 
   const now = new Date()
+  const routine = allRoutine.filter((r) => r.exam_year === config.exam_year)
   const codes = subjectsFor(profile).map((s) => s.code)
   const first = firstPaper(routine)
   const next = nextPaperFor(routine, codes, now)
