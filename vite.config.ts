@@ -35,6 +35,8 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Take control on first install so the app works offline right after the first visit.
+        clientsClaim: true,
         // App shell: all built JS/CSS/HTML plus Bengali+Latin font subsets.
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         // Sign-in and sync only run online, so supabase-js is fetched when needed.
@@ -50,9 +52,10 @@ export default defineConfig({
           },
           {
             // Lesson packs, audio and images downloaded on demand (M3).
-            urlPattern: /\/content\//,
+            // Narration audio only (bundled or Supabase Storage). Lesson JSON lives in IndexedDB.
+            urlPattern: ({ url }) => url.pathname.includes('/content/audio/') || url.pathname.includes('/storage/v1/object/public/lesson-audio/'),
             handler: 'CacheFirst',
-            options: { cacheName: 'alo-content', expiration: { maxEntries: 2000 } },
+            options: { cacheName: 'alo-content', cacheableResponse: { statuses: [0, 200] }, rangeRequests: true },
           },
         ],
       },

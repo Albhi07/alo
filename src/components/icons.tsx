@@ -13,3 +13,4 @@ export const GearIcon = svg(<><circle cx="12" cy="12" r="3" /><path d="M19.4 15a
 export const OfflineIcon = svg(<><path d="M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8A15 15 0 0 0 10.7 5" /><path d="M5 12.5a10 10 0 0 1 5.2-2.4M19 12.5a10 10 0 0 0-2.1-1.5" /><path d="M8.5 16a5 5 0 0 1 7 0" /><path d="M12 20h.01" /><path d="m3 3 18 18" /></>)
 export const FlameIcon = svg(<path d="M12 22c4 0 7-2.7 7-7 0-4-3-6.5-4-10-2 2-2.5 4-2.5 5.5C11 9 10 7.5 10 6c-3 2.5-5 5.5-5 9 0 4.3 3 7 7 7z" />)
 export const BackIcon = svg(<path d="M15 18 9 12l6-6" />)
+export const ReplayIcon = svg(<><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></>)

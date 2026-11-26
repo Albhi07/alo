@@ -73,18 +73,19 @@ export async function applyPack(pack: ChapterPack, pinned: boolean) {
     await db.c_packs.put({
       key, chapter_id: pack.chapter_id, medium: pack.medium, version: pack.version,
       bytes: new Blob([JSON.stringify(pack)]).size, pinned: pinned || !!prev?.pinned, fetched_at: new Date().toISOString(),
+      audio_bytes: prev?.audio_bytes,
     })
   })
 }
 
 /** Make sure a chapter's content is cached; fetches it when online and missing or stale. */
-export async function ensureChapter(chapterId: string, medium: Medium, opts: { pin?: boolean; source?: ContentSource } = {}) {
+export async function ensureChapter(chapterId: string, medium: Medium, opts: { pin?: boolean; force?: boolean; source?: ContentSource } = {}) {
   if (await localCmsMode()) return
   const key = `${chapterId}.${medium}`
   const have = await db.c_packs.get(key)
   const packs = await kvGet<ContentIndex['packs']>('content.packs', {})
   const want = packs[chapterId]?.[medium]?.version
-  if (have && (!want || have.version === want) && !opts.pin) return
+  if (have && (!want || have.version === want) && !opts.pin && !opts.force) return
   if (!navigator.onLine) return
   const pack = await (opts.source ?? activeSource()).chapterPack(chapterId, medium)
   await applyPack(pack, !!opts.pin)

@@ -107,7 +107,9 @@
     "target": "Today's target",
     "continue": "Continue where you left off",
     "nothingYet": "Pick a subject and start your first lesson.",
-    "examOver": "This year's written exams are over. Watch the notices for results."
+    "examOver": "This year's written exams are over. Watch the notices for results.",
+    "resume": "Resume",
+    "lessonDone": "Lesson finished"
   },
   "subjects": {
     "title": "My subjects",
@@ -333,5 +335,39 @@
     "discard": "Discard local changes",
     "discardConfirm": "All content changes in this browser will be erased and published content reloaded.",
     "open": "Open content admin"
+  },
+  "player": {
+    "sceneOf": "Scene {{n}} of {{total}}",
+    "play": "Play",
+    "pause": "Pause",
+    "replay": "Replay this scene",
+    "prev": "Previous scene",
+    "next": "Next scene",
+    "finish": "Finish lesson",
+    "answerToContinue": "Answer the question to continue.",
+    "speed": "Playback speed",
+    "captionsOn": "Captions on",
+    "captionsOff": "Captions off",
+    "audioUnavailable": "Audio can't play right now. Read the captions and carry on.",
+    "done": "Lesson complete. Well done.",
+    "checks": "You got {{right}} of {{total}} check questions right.",
+    "doneHint": "Practising a few questions now will help it stick.",
+    "practise": "Practise this chapter's questions",
+    "again": "Watch the lesson again",
+    "backToChapter": "Back to chapter"
+  },
+  "download": {
+    "cta": "Download for offline",
+    "progress": "Downloading… {{done}} of {{total}}",
+    "done": "Downloaded",
+    "remove": "Delete",
+    "removeConfirm": "Delete this chapter's download? Your progress is kept.",
+    "failed": "The download didn't finish. Try again when the connection is better.",
+    "title": "Offline downloads",
+    "total_one": "{{count}} chapter, {{size}} in total",
+    "total_other": "{{count}} chapters, {{size}} in total",
+    "meter": "Storage used",
+    "used": "The app uses {{used}}; {{free}} more is available",
+    "none": "No chapters downloaded yet."
   }
 }

@@ -6,11 +6,13 @@ import { firstPaper, nextPaperFor, paperStart } from '../data/exam'
 import { subjectByCode } from '../data/catalog'
 import { daysBetween } from '../lib/format'
 import { FlameIcon } from '../components/icons'
+import { useLastLesson } from '../state/lessonProgress'
 
 export default function Home() {
   const { t, lang, date, n } = useT()
   const profile = useProfile()
   const { routine: allRoutine, config } = useExamData()
+  const last = useLastLesson()
   if (!profile) return null
 
   const now = new Date()
@@ -56,8 +58,22 @@ export default function Home() {
 
       <section className="card">
         <h2 className="text-lg font-semibold">{t('home.continue')}</h2>
-        <p className="text-muted">{t('home.nothingYet')}</p>
-        <Link to="/subjects" className="btn-primary mt-3 w-full">{t('nav.subjects')}</Link>
+        {last ? (
+          <>
+            <p className="font-semibold">{lang === 'bn' ? last.lesson.title_bn : last.lesson.title_en}</p>
+            <p className="text-sm text-muted">
+              {last.pos.done ? t('home.lessonDone') : t('player.sceneOf', { n: last.pos.idx + 1, total: last.pos.total })}
+            </p>
+            <Link to={last.pos.done ? `/chapters/${last.pos.chapter_id}?tab=mcq` : `/lessons/${last.lesson.id}`} className="btn-primary mt-3 w-full">
+              {last.pos.done ? t('player.practise') : t('home.resume')}
+            </Link>
+          </>
+        ) : (
+          <>
+            <p className="text-muted">{t('home.nothingYet')}</p>
+            <Link to="/subjects" className="btn-primary mt-3 w-full">{t('nav.subjects')}</Link>
+          </>
+        )}
       </section>
     </div>
   )

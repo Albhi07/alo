@@ -15,6 +15,7 @@ const AdminHome = lazy(() => import('./admin/AdminHome'))
 const EntityList = lazy(() => import('./admin/EntityList'))
 const EntityEdit = lazy(() => import('./admin/EntityEdit'))
 const CsvImport = lazy(() => import('./admin/CsvImport'))
+const LessonPlayer = lazy(() => import('./pages/LessonPlayer'))
 const Settings = lazy(() => import('./pages/Settings'))
 const Placeholder = lazy(() => import('./pages/Placeholder'))
 const NotFound = lazy(() => import('./pages/NotFound'))
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
       { path: '/subjects', element: <Subjects /> },
       { path: '/subjects/:code', element: <SubjectPage /> },
       { path: '/chapters/:id', element: <ChapterPage /> },
+      { path: '/lessons/:id', element: <LessonPlayer /> },
       { path: '/exam', element: <Placeholder section="exam" /> },
       { path: '/focus', element: <Placeholder section="focus" /> },
       { path: '/tutor', element: <Placeholder section="tutor" needsOnline /> },

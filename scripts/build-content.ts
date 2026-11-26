@@ -5,7 +5,8 @@
 // Ids are deterministic (name-based), so re-running never creates duplicates.
 // Usage: npx tsx scripts/build-content.ts
 import { createHash } from 'node:crypto'
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
 import { SUBJECTS } from '../src/data/catalog'
 import { SEED_EXAM_CONFIG, SEED_ROUTINE } from '../src/data/exam'
 import type {
@@ -65,6 +66,32 @@ function sceneBody(s: SceneSrc, m: M): SceneBody {
 /** Rough narration length until real audio exists: ~13 characters per second of speech. */
 const estSeconds = (text: string) => Math.max(8, Math.round(text.length / 13))
 
+// ---------------------------------------------------------------- narration audio
+// Placeholder narration: espeak-ng speech encoded as Opus, mono, 24 kbps (~3 KB per second).
+// Real recordings replace these through the admin CMS. Files are named by a hash of the
+// caption so a changed caption gets new audio, and unchanged audio is never rebuilt.
+const AUDIO_DIR = 'public/content/audio'
+const hasTool = (cmd: string, flag = '--version') => { try { execFileSync(cmd, [flag], { stdio: 'ignore' }); return true } catch { return false } }
+const CAN_TTS = hasTool('espeak-ng') && hasTool('ffmpeg', '-version')
+if (!CAN_TTS) console.warn('espeak-ng/ffmpeg not found: keeping existing audio, new scenes get none')
+const usedAudio = new Set<string>()
+
+function narrationAudio(lessonId: string, idx: number, text: string, m: M): { path: string; seconds: number; bytes: number } | null {
+  const rel = `${lessonId}/${idx}-${hash(m + text).slice(0, 8)}.opus`
+  const file = `${AUDIO_DIR}/${rel}`
+  if (!existsSync(file)) {
+    if (!CAN_TTS) return null
+    mkdirSync(`${AUDIO_DIR}/${lessonId}`, { recursive: true })
+    const wav = `${file}.wav`
+    execFileSync('espeak-ng', ['-v', m === 'bn' ? 'bn' : 'en-gb', '-s', m === 'bn' ? '140' : '150', '-w', wav, text])
+    execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', wav, '-ac', '1', '-ar', '24000', '-c:a', 'libopus', '-b:a', '24k', '-application', 'voip', file])
+    rmSync(wav)
+  }
+  usedAudio.add(file)
+  const seconds = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file]).toString().trim())
+  return { path: `content/audio/${rel}`, seconds: Math.round(seconds * 10) / 10, bytes: statSync(file).size }
+}
+
 // ---------------------------------------------------------------- packs
 const packs: ChapterPack[] = []
 for (const cc of CHAPTER_CONTENT) {
@@ -72,15 +99,24 @@ for (const cc of CHAPTER_CONTENT) {
   for (const m of MEDIA) {
     const lessons = cc.lessons.map((ls, li) => {
       const id = idFor(`lesson:${ls.key}:${m}`)
-      const scenes: SceneRow[] = ls.scenes.map((s, idx) => ({
-        id: idFor(`scene:${ls.key}:${m}:${idx}`), lesson_id: id, idx, type: s.type,
-        body_json: sceneBody(s, m), audio_path: null, captions: L(s.narration, m),
-      }))
+      let seconds = 0
+      let bytes = 0
+      const scenes: SceneRow[] = ls.scenes.map((s, idx) => {
+        const audio = narrationAudio(id, idx, L(s.narration, m), m)
+        seconds += audio?.seconds ?? estSeconds(L(s.narration, m))
+        bytes += audio?.bytes ?? 0
+        return {
+          id: idFor(`scene:${ls.key}:${m}:${idx}`), lesson_id: id, idx, type: s.type,
+          body_json: sceneBody(s, m), audio_path: audio?.path ?? null, captions: L(s.narration, m),
+        }
+      })
       const row: LessonRow & { scenes: SceneRow[] } = {
         id, chapter_id: cid, title_bn: ls.title.bn, title_en: ls.title.en, medium: m,
-        duration_s: ls.scenes.reduce((t, s) => t + estSeconds(L(s.narration, m)), 0),
-        size_bytes: 0, version: 1, published: true, sort: li, scenes,
+        duration_s: Math.round(seconds), size_bytes: bytes, version: 1, published: true, sort: li, scenes,
       }
+      // Hard budget: a 10-minute lesson stays under 3 MB (scaled by length).
+      const budget = 3 * 1024 * 1024 * Math.max(1, seconds / 600)
+      if (bytes > budget) throw new Error(`${id}: audio ${bytes} bytes over budget ${budget}`)
       return row
     })
     const questions: QuestionRow[] = [
@@ -133,8 +169,14 @@ for (const p of packs) {
 
 // ---------------------------------------------------------------- write JSON
 const routine = SEED_ROUTINE.map((r) => ({ ...r, id: idFor(`routine:${r.exam_year}:${r.subject_code}:${r.paper}`) }))
-rmSync('public/content', { recursive: true, force: true })
+rmSync('public/content/chapters', { recursive: true, force: true })
 mkdirSync('public/content/chapters', { recursive: true })
+// Remove narration files no scene uses any more.
+if (CAN_TTS && existsSync(AUDIO_DIR)) {
+  for (const d of readdirSync(AUDIO_DIR)) for (const f of readdirSync(`${AUDIO_DIR}/${d}`)) {
+    if (!usedAudio.has(`${AUDIO_DIR}/${d}/${f}`)) rmSync(`${AUDIO_DIR}/${d}/${f}`)
+  }
+}
 const packIndex: ContentIndex['packs'] = {}
 for (const p of packs) {
   const json = JSON.stringify(p)
@@ -180,5 +222,9 @@ sql += 'commit;\n'
 writeFileSync('supabase/seed.sql', sql)
 
 console.log(`subjects ${SUBJECTS.length}, chapters ${chapters.length}, packs ${packs.length}, lessons ${allLessons.length}, questions ${packs.reduce((t, p) => t + p.questions.length, 0)}`)
-for (const p of packs) console.log(`  pack ${p.chapter_id}.${p.medium}: ${(packIndex[p.chapter_id][p.medium]!.bytes / 1024).toFixed(1)} KB`)
+for (const p of packs) {
+  const audio = p.lessons.reduce((t, l) => t + l.size_bytes, 0)
+  const secs = p.lessons.reduce((t, l) => t + l.duration_s, 0)
+  console.log(`  pack ${p.chapter_id}.${p.medium}: ${(packIndex[p.chapter_id][p.medium]!.bytes / 1024).toFixed(1)} KB json, ${(audio / 1024).toFixed(0)} KB audio, ${Math.round(secs)} s`)
+}
 void STAMP
