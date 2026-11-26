@@ -8,6 +8,7 @@
     <meta name="theme-color" content="#14213d" />
     <meta name="description" content="আলো: SSC ২০২৭ প্রস্তুতির জন্য বিনামূল্যের, অফলাইনে চলা পাঠ ও অনুশীলন" />
     <title>আলো</title>
+    <style>.boot{background:#14213d}.dark .boot{background:#0b1224}</style>
     <script>
       // Apply saved theme before paint to avoid a flash.
       try {
@@ -20,7 +21,9 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><!-- Painted before the app's JS arrives; React replaces it. Matches the real header. -->
+      <div class="boot" style="position:sticky;top:0;color:#fff"><div style="max-width:36rem;margin:0 auto;height:3.5rem;display:flex;align-items:center;gap:.5rem;padding:0 1rem;font:600 1.25rem/1 'Hind Siliguri',system-ui,sans-serif"><img src="/icon.svg" alt="" width="28" height="28" /><span>আলো</span></div></div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

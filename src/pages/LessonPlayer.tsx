@@ -135,7 +135,7 @@ export default function LessonPlayer() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <button className="btn-link -ml-2 px-1" onClick={() => nav(`/chapters/${lesson.chapter_id}`)} aria-label={t('player.backToChapter')}><BackIcon /></button>
-        <p className="flex-1 truncate text-sm font-semibold text-muted">{title}</p>
+        <h1 className="flex-1 truncate text-sm font-semibold text-muted">{title}</h1>
         <p className="text-sm text-muted" aria-live="polite">{t('player.sceneOf', { n: (idx ?? 0) + 1, total })}</p>
       </div>
       <div className="flex gap-1" aria-hidden>

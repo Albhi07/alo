@@ -17,7 +17,7 @@ export function Header({ showSettings = true }: { showSettings?: boolean }) {
             type="button"
             onClick={() => setLanguage(other)}
             className="min-h-tap min-w-tap rounded-xl px-3 font-semibold hover:bg-white/10"
-            aria-label={t('lang.toggle')}
+            aria-label={`${t('lang.short')} · ${t('lang.toggle')}`}
             lang={other}
           >
             {t('lang.short')}

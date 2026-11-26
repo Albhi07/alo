@@ -13,6 +13,11 @@ try {
   applyTheme(t === 'light' || t === 'dark' ? t : 'system')
 } catch { /* ignore */ }
 
+// Start fetching the first screen's chunk now rather than after the router decides,
+// which otherwise costs a round trip on a slow phone connection.
+const first = location.pathname
+if (first === '/' || first === '/welcome') void import('./pages/Welcome')
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

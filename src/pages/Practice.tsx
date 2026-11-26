@@ -83,6 +83,7 @@ export default function Practice() {
   return (
     <div className="flex flex-col gap-4">
       {back}
+      <h1 className="sr-only">{t('practice.title')}</h1>
       <div className="flex items-center justify-between text-sm text-muted">
         <span aria-live="polite">{t('practice.progress', { n: pos + 1, total: queue.length })}</span>
         <span>{t('practice.score', { right: score.right, answered: score.answered })}</span>
