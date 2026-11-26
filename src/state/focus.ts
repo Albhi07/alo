@@ -78,14 +78,15 @@ async function activeDays(): Promise<Set<string>> {
 }
 
 /** Streak, today's minutes and the last 7 days of focus minutes (oldest first). */
+export async function computeStudyStats(today = todayIso()) {
+  const focus = ((await db.focus_sessions.toArray()) as unknown as FocusRow[]).filter((f) => !f.deleted)
+  const byDay = new Map<string, number>()
+  for (const f of focus) { const d = todayIso(new Date(f.started_at)); byDay.set(d, (byDay.get(d) ?? 0) + f.minutes) }
+  const week = Array.from({ length: 7 }, (_, i) => { const d = addDays(today, i - 6); return { date: d, minutes: byDay.get(d) ?? 0 } })
+  const streak = computeStreak(await activeDays(), today)
+  return { today: byDay.get(today) ?? 0, week, streak }
+}
+
 export function useStudyStats() {
-  return useLiveQuery(async () => {
-    const today = todayIso()
-    const focus = ((await db.focus_sessions.toArray()) as unknown as FocusRow[]).filter((f) => !f.deleted)
-    const byDay = new Map<string, number>()
-    for (const f of focus) { const d = todayIso(new Date(f.started_at)); byDay.set(d, (byDay.get(d) ?? 0) + f.minutes) }
-    const week = Array.from({ length: 7 }, (_, i) => { const d = addDays(today, i - 6); return { date: d, minutes: byDay.get(d) ?? 0 } })
-    const streak = computeStreak(await activeDays(), today)
-    return { today: byDay.get(today) ?? 0, week, streak }
-  }, [])
+  return useLiveQuery(() => computeStudyStats(), [])
 }

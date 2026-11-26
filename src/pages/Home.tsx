@@ -14,6 +14,11 @@ import { useStudyStats } from '../state/focus'
 import { PlanList } from '../components/PlanList'
 import { useUpcomingNotices } from '../state/notices'
 import { todayIso } from '../lib/format'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { kvGet } from '../db'
+import { useUserId } from '../state/auth'
+import { useOnline } from '../hooks/useOnline'
+import type { MyClass } from '../state/connect'
 
 export default function Home() {
   const { t, lang, date, n } = useT()
@@ -26,6 +31,12 @@ export default function Home() {
   const stats = useStudyStats()
   const notices = useUpcomingNotices(14)
   useEffect(() => { if (profile) void ensurePlan(profile) }, [profile])
+  const userId = useUserId()
+  const online = useOnline()
+  // Class tasks: refreshed when online, kept for offline.
+  useEffect(() => { if (userId && online) void import('../state/connect').then((m) => m.myClasses()) }, [userId, online])
+  const classes = useLiveQuery(() => kvGet<MyClass[]>('classes.mine', []), [], [] as MyClass[])
+  const due = classes.flatMap((c) => c.assignments.map((a) => ({ ...a, className: c.name }))).filter((a) => !a.due_on || a.due_on >= today)
   if (!profile) return null
   const gpa = readiness?.gpa
   const fmt = (x: number) => n(x.toFixed(2))
@@ -82,6 +93,15 @@ export default function Home() {
         </div>
         {plan?.length ? <PlanList items={plan} editable={false} /> : <p className="text-muted">{t('home.planEmpty')}</p>}
       </section>
+
+      {due.length > 0 && (
+        <Link to="/connect" className="card flex flex-col gap-1">
+          <h2 className="text-sm font-semibold text-muted">{t('people.classTasks')}</h2>
+          {due.slice(0, 3).map((a) => (
+            <p key={a.id} className="font-semibold">{a.className}: {t(`people.kind.${a.kind}`)}{a.due_on ? ` · ${t('people.due', { date: date(a.due_on) })}` : ''}</p>
+          ))}
+        </Link>
+      )}
 
       {!!notices?.length && (
         <Link to="/notices" className="card flex flex-col gap-1">

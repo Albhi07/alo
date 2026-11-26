@@ -28,11 +28,15 @@ insert into public.mastery (id, user_id, chapter_id, score, updated_at)
   select '30000000-0000-0000-0000-000000000001', auth.uid(), id, 40, now() from public.chapters limit 1;
 
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-0000000000f1', false); -- teacher
+select public.set_my_role('teacher');
 insert into public.classes (id, teacher_id, name) values ('40000000-0000-0000-0000-000000000001', auth.uid(), 'Class 10 A');
 do $$ begin assert (select count(*) from public.mastery) = 0, 'teacher sees nobody before they join'; end $$;
 
+reset role;
+select join_code as jc from public.classes where id = '40000000-0000-0000-0000-000000000001' \gset
+set role authenticated;
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-0000000000c1', false);
-insert into public.class_members (class_id, user_id) values ('40000000-0000-0000-0000-000000000001', auth.uid());
+select public.join_class(:'jc', 'C1');
 
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-0000000000f1', false);
 do $$ begin assert (select count(*) from public.mastery) = 1, 'teacher sees member mastery'; end $$;

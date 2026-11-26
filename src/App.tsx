@@ -26,6 +26,11 @@ const Plan = lazy(() => import('./pages/Plan'))
 const Notices = lazy(() => import('./pages/Notices'))
 const Settings = lazy(() => import('./pages/Settings'))
 const Tutor = lazy(() => import('./pages/Tutor'))
+const Connect = lazy(() => import('./pages/people/Connect'))
+const ParentView = lazy(() => import('./pages/people/ParentView'))
+const Teacher = lazy(() => import('./pages/people/Teacher'))
+const TeacherClass = lazy(() => import('./pages/people/TeacherClass'))
+const Analytics = lazy(() => import('./admin/Analytics'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 /** Until this device has a profile, send the student to the welcome screen. */
@@ -43,6 +48,9 @@ const router = createBrowserRouter([
       { path: '/welcome', element: <Welcome /> },
       { path: '/signin', element: <SignIn /> },
       { path: '/onboarding', element: <Onboarding /> },
+      { path: '/parent', element: <ParentView /> },
+      { path: '/teacher', element: <Teacher /> },
+      { path: '/teacher/:id', element: <TeacherClass /> },
     ],
   },
   {
@@ -62,12 +70,14 @@ const router = createBrowserRouter([
       { path: '/plan', element: <Plan /> },
       { path: '/notices', element: <Notices /> },
       { path: '/tutor', element: <Tutor /> },
+      { path: '/connect', element: <Connect /> },
       { path: '/settings', element: <Settings /> },
       {
         path: '/admin', element: <AdminLayout />,
         children: [
           { index: true, element: <AdminHome /> },
           { path: 'import', element: <CsvImport /> },
+          { path: 'analytics', element: <Analytics /> },
           { path: ':entity', element: <EntityList /> },
           { path: ':entity/:key', element: <EntityEdit /> },
         ],

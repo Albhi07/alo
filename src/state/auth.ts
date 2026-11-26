@@ -45,6 +45,8 @@ export async function syncNow() {
   const { data } = await sb.auth.getSession()
   if (!data.session) return
   await flush(supabaseRemote(sb))
+  // Keep the summary that linked parents and class teachers see up to date (skipped when unchanged).
+  await import('./connect').then((m) => m.publishSummary()).catch(() => undefined)
 }
 
 export async function signOut() {
