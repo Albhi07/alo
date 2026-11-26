@@ -491,7 +491,8 @@
     "progress": "Question {{n}} of {{total}}",
     "score": "{{right}}/{{answered}} right",
     "next": "Next",
-    "finish": "See result"
+    "finish": "See result",
+    "title": "MCQ practice"
   },
   "drill": {
     "title": "Drills",
