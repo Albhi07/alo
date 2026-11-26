@@ -1,7 +1,7 @@
 import Dexie, { type Table } from 'dexie'
 import type { Board, Group, Lang, Medium } from '../data/catalog'
 import type {
-  ChapterRow, DrillTemplateRow, LessonRow, MethodSheetRow, NoticeRow, QuestionRow, SceneRow, SubjectRow,
+  ChapterRow, DrillTemplateRow, MockRow, LessonRow, MethodSheetRow, NoticeRow, QuestionRow, SceneRow, SubjectRow,
 } from '../data/content-types'
 
 /** Every synced record carries these. `user_id` is null while in guest mode. */
@@ -81,6 +81,8 @@ export class AloDB extends Dexie {
   c_notices!: Table<NoticeRow, string>
   /** Downloaded chapter packs: key `${chapter_id}.${medium}` */
   c_packs!: Table<PackRecord, string>
+  /** Downloaded mock papers (one per mock and medium), with the index version they came from. */
+  c_mocks!: Table<MockRow & { version: string }, string>
 
   constructor(name = 'alo') {
     super(name)
@@ -106,6 +108,10 @@ export class AloDB extends Dexie {
       c_drills: 'id, chapter_id',
       c_notices: 'id, event_date',
       c_packs: 'key, chapter_id',
+    })
+    this.version(3).stores({
+      attempts: 'id, user_id, question_id, drill_template_id, created_at',
+      c_mocks: 'id, subject_code, medium',
     })
   }
 }

@@ -76,7 +76,27 @@ export interface ContentIndex {
   exam_config: import('./exam').ExamConfig[]
   routine: import('./exam').RoutineRow[]
   notices: NoticeRow[]
+  /** Mock papers available to download (one row per mock and medium). */
+  mocks: MockSummary[]
 }
+
+export interface MockMcq {
+  id: string; subtype: 'single' | 'multi_completion' | 'situation'; context?: string
+  stem: string; options: string[]; answer: number; explanation: string
+}
+export interface MockCqPart { part: 'a' | 'b' | 'c' | 'd'; marks: number; prompt: string; model: string; rubric: { points: number; criterion: string }[] }
+export interface MockCq { id: string; stem: string; parts: MockCqPart[] }
+export interface MockPaper {
+  marks: { mcq: number; cq: number; practical?: number }
+  cq_rules: { answer: number; min_per_section: number }
+  mcq: MockMcq[]
+  sections: { key: string; title: string; cqs: MockCq[] }[]
+}
+export interface MockRow {
+  id: string; subject_code: string; title: string; medium: Medium; paper_json: MockPaper
+  duration_mcq_min: number; duration_cq_min: number; exam_year: number; published: boolean; updated_at?: string
+}
+export type MockSummary = Omit<MockRow, 'paper_json'> & { version: string; bytes: number; mcq: number; cq: number }
 
 export interface ChapterPack {
   chapter_id: string

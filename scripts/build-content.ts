@@ -10,11 +10,13 @@ import { execFileSync } from 'node:child_process'
 import { SUBJECTS } from '../src/data/catalog'
 import { SEED_EXAM_CONFIG, SEED_ROUTINE } from '../src/data/exam'
 import type {
+  MockRow, MockSummary,
   ChapterPack, ChapterRow, ContentIndex, CqAnswer, CqPart, LessonRow, MethodSheetRow, QuestionRow, SceneBody, SceneRow,
 } from '../src/data/content-types'
 import { CHAPTERS } from '../content/chapters'
 import { CHAPTER_CONTENT } from '../content/index'
-import { CQ_MARKS, type Bi, type SceneSrc } from '../content/types'
+import { CQ_MARKS, type Bi, type MockSrc, type SceneSrc } from '../content/types'
+import { MOCKS } from '../content/index'
 import { generate } from '../src/lib/drill'
 
 const MEDIA = ['bn', 'en'] as const
@@ -176,6 +178,47 @@ for (const p of packs) for (const d of p.drill_templates) {
   for (let seed = 1; seed <= 50; seed++) for (const m of MEDIA) generate(d as never, m, seed)
 }
 
+// ---------------------------------------------------------------- mocks
+function buildMock(src: MockSrc, m: M): MockRow {
+  const id = idFor(`mock:${src.key}:${m}`)
+  return {
+    id, subject_code: src.subject_code, title: L(src.title, m), medium: m, exam_year: src.exam_year,
+    duration_mcq_min: src.duration_mcq_min, duration_cq_min: src.duration_cq_min, published: true,
+    paper_json: {
+      marks: src.marks, cq_rules: src.cq_rules,
+      mcq: src.mcqs.map((q) => ({
+        id: idFor(`mock:${src.key}:${q.key}:${m}`), subtype: q.subtype, ...(q.context ? { context: L(q.context, m) } : {}),
+        stem: L(q.stem, m), options: q.options.map((o) => L(o, m)), answer: q.answer, explanation: L(q.explanation, m),
+      })),
+      sections: src.sections.map((sec) => ({
+        key: sec.key, title: L(sec.title, m),
+        cqs: sec.cqs.map((c) => ({
+          id: idFor(`mock:${src.key}:${c.key}:${m}`), stem: L(c.stem, m),
+          parts: c.parts.map((pt) => ({
+            part: pt.part, marks: pt.marks, prompt: L(pt.prompt, m), model: L(pt.model, m),
+            rubric: pt.rubric.map((r) => ({ points: r.points, criterion: L(r.criterion, m) })),
+          })),
+        })),
+      })),
+    },
+  }
+}
+const mocks = MOCKS.flatMap((src) => MEDIA.map((m) => buildMock(src, m)))
+for (const mk of mocks) {
+  const p = mk.paper_json
+  if (p.mcq.length !== p.marks.mcq) throw new Error(`${mk.id}: ${p.mcq.length} MCQs for ${p.marks.mcq} marks`)
+  for (const q of p.mcq) if (q.options.length !== 4 || q.answer < 0 || q.answer > 3) throw new Error(`${q.id}: bad MCQ`)
+  const cqs = p.sections.flatMap((s) => s.cqs)
+  for (const c of cqs) for (const pt of c.parts) {
+    const pts = pt.rubric.reduce((t, r) => t + r.points, 0)
+    if (pts !== pt.marks) throw new Error(`${c.id} part ${pt.part}: rubric ${pts} != marks ${pt.marks}`)
+  }
+  const per = cqs.map((c) => c.parts.reduce((t, pt) => t + pt.marks, 0))
+  if (new Set(per).size !== 1 || per[0] * p.cq_rules.answer !== p.marks.cq) throw new Error(`${mk.id}: CQ marks don't add up to ${p.marks.cq}`)
+  if (p.sections.length * p.cq_rules.min_per_section > p.cq_rules.answer) throw new Error(`${mk.id}: section minimums exceed answer count`)
+  if (p.sections.some((s) => s.cqs.length < p.cq_rules.min_per_section)) throw new Error(`${mk.id}: a section has too few CQs`)
+}
+
 // ---------------------------------------------------------------- write JSON
 const routine = SEED_ROUTINE.map((r) => ({ ...r, id: idFor(`routine:${r.exam_year}:${r.subject_code}:${r.paper}`) }))
 rmSync('public/content/chapters', { recursive: true, force: true })
@@ -196,8 +239,15 @@ for (const p of packs) {
     mcq: p.questions.filter((q) => q.kind === 'mcq').length, cq: p.questions.filter((q) => q.kind === 'cq').length,
   }
 }
+rmSync('public/content/mocks', { recursive: true, force: true })
+mkdirSync('public/content/mocks', { recursive: true })
+const mockIndex: MockSummary[] = mocks.map(({ paper_json, ...rest }) => {
+  const json = JSON.stringify({ ...rest, paper_json })
+  writeFileSync(`public/content/mocks/${rest.id}.json`, json)
+  return { ...rest, version: hash(json), bytes: Buffer.byteLength(json), mcq: paper_json.mcq.length, cq: paper_json.sections.reduce((t, s) => t + s.cqs.length, 0) }
+})
 const indexBody = {
-  subjects: SUBJECTS, chapters, packs: packIndex, exam_config: [SEED_EXAM_CONFIG], routine, notices: [],
+  subjects: SUBJECTS, chapters, packs: packIndex, exam_config: [SEED_EXAM_CONFIG], routine, notices: [], mocks: mockIndex,
 }
 const index: ContentIndex = { version: hash(JSON.stringify(indexBody)), ...indexBody }
 writeFileSync('public/content/index.json', JSON.stringify(index))
@@ -229,9 +279,11 @@ sql += insert('lesson_scenes', allLessons.flatMap((l) => l.scenes), 'id')
 sql += insert('questions', packs.flatMap((p) => p.questions), 'id')
 sql += insert('method_sheets', packs.flatMap((p) => p.method_sheets), 'id')
 sql += insert('drill_templates', [...new Map(packs.flatMap((p) => p.drill_templates).map((d) => [d.id, d])).values()], 'id')
+sql += insert('mocks', mocks, 'id')
 sql += 'commit;\n'
 writeFileSync('supabase/seed.sql', sql)
 
+for (const mk of mockIndex) console.log(`  mock ${mk.title} (${mk.medium}): ${mk.mcq} MCQ, ${mk.cq} CQ, ${(mk.bytes / 1024).toFixed(1)} KB`)
 console.log(`subjects ${SUBJECTS.length}, chapters ${chapters.length}, packs ${packs.length}, lessons ${allLessons.length}, questions ${packs.reduce((t, p) => t + p.questions.length, 0)}`)
 for (const p of packs) {
   const audio = p.lessons.reduce((t, l) => t + l.size_bytes, 0)

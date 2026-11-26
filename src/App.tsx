@@ -18,6 +18,9 @@ const CsvImport = lazy(() => import('./admin/CsvImport'))
 const LessonPlayer = lazy(() => import('./pages/LessonPlayer'))
 const Practice = lazy(() => import('./pages/Practice'))
 const Drill = lazy(() => import('./pages/Drill'))
+const Exam = lazy(() => import('./pages/Exam'))
+const MockExam = lazy(() => import('./pages/MockExam'))
+const MockResult = lazy(() => import('./pages/MockResult'))
 const Settings = lazy(() => import('./pages/Settings'))
 const Placeholder = lazy(() => import('./pages/Placeholder'))
 const NotFound = lazy(() => import('./pages/NotFound'))
@@ -49,7 +52,9 @@ const router = createBrowserRouter([
       { path: '/lessons/:id', element: <LessonPlayer /> },
       { path: '/practice/:chapterId', element: <Practice /> },
       { path: '/drill/:id', element: <Drill /> },
-      { path: '/exam', element: <Placeholder section="exam" /> },
+      { path: '/exam', element: <Exam /> },
+      { path: '/exam/mock/:id', element: <MockExam /> },
+      { path: '/exam/result/:id', element: <MockResult /> },
       { path: '/focus', element: <Placeholder section="focus" /> },
       { path: '/tutor', element: <Placeholder section="tutor" needsOnline /> },
       { path: '/settings', element: <Settings /> },

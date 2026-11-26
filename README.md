@@ -14,8 +14,8 @@ first-load JavaScript, lessons as narrated scenes instead of video.
 | M2 | Content model, admin CMS, seed data, subjects/chapters | done |
 | M3 | Lesson player, offline download, data saver | done |
 | M4 | MCQ, SRS, drill generators, board questions, method sheets | done |
-| M5 | Exam centre, timed mocks, readiness and predicted GPA | next |
-| M6 | Study plan, Focus timer, streaks, notices + web push | |
+| M5 | Exam centre, timed mocks, readiness and predicted GPA | done |
+| M6 | Study plan, Focus timer, streaks, notices + web push | next |
 | M7 | AI tutor Edge Function, photo marking, rate limits | |
 | M8 | Parent link, teacher dashboard, CSV export, analytics | |
 | M9 | Performance, accessibility, Playwright e2e | |
