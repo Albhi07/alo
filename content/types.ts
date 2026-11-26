@@ -42,3 +42,17 @@ export interface MethodSheetSrc { key: string; question_type: string; body: Bi }
 
 /** Inline formula marker for rich text: $...$ is rendered with KaTeX. */
 export const CQ_MARKS = { a: 1, b: 2, c: 3, d: 4 } as const
+
+/** Drill template: random variables, constraints and a data-only solution script (see src/lib/drill.ts). */
+export interface DrillSrc {
+  key: string
+  title: Bi
+  vars: Record<string, { min?: number; max?: number; step?: number; not?: number[]; choices?: number[] }>
+  constraints: string[]
+  script: {
+    derived?: Record<string, string>
+    question: Bi
+    answers: { label: Bi; expr: string; tolerance?: number; unit?: Bi }[]
+    steps: Bi[]
+  }
+}

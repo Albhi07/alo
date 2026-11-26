@@ -78,3 +78,12 @@
 .prose-alo p { @apply mb-2; }
 .katex { font-size: 1.05em; }
 .katex-display { margin: 0.25em 0; overflow-x: auto; overflow-y: hidden; }
+
+/* Printing method sheets: only the notes, black on white, no app chrome. */
+@media print {
+  header, nav, .no-print, [role='tablist'] { display: none !important; }
+  body { background: #fff !important; color: #000 !important; font-size: 12pt; }
+  main > div > :not([role='tabpanel']) { display: none !important; }
+  .print-sheet { border: none !important; padding: 0 !important; break-inside: avoid-page; }
+  @page { margin: 15mm; }
+}

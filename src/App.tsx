@@ -16,6 +16,8 @@ const EntityList = lazy(() => import('./admin/EntityList'))
 const EntityEdit = lazy(() => import('./admin/EntityEdit'))
 const CsvImport = lazy(() => import('./admin/CsvImport'))
 const LessonPlayer = lazy(() => import('./pages/LessonPlayer'))
+const Practice = lazy(() => import('./pages/Practice'))
+const Drill = lazy(() => import('./pages/Drill'))
 const Settings = lazy(() => import('./pages/Settings'))
 const Placeholder = lazy(() => import('./pages/Placeholder'))
 const NotFound = lazy(() => import('./pages/NotFound'))
@@ -45,6 +47,8 @@ const router = createBrowserRouter([
       { path: '/subjects/:code', element: <SubjectPage /> },
       { path: '/chapters/:id', element: <ChapterPage /> },
       { path: '/lessons/:id', element: <LessonPlayer /> },
+      { path: '/practice/:chapterId', element: <Practice /> },
+      { path: '/drill/:id', element: <Drill /> },
       { path: '/exam', element: <Placeholder section="exam" /> },
       { path: '/focus', element: <Placeholder section="focus" /> },
       { path: '/tutor', element: <Placeholder section="tutor" needsOnline /> },
