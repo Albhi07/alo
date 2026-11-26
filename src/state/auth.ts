@@ -22,11 +22,15 @@ export function startAuthAndSync() {
     sb.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
         await adoptGuestRows(session.user.id)
+        await pullProfile()
         kick()
       }
     })
     const { data } = await sb.auth.getSession()
-    if (data.session?.user) await adoptGuestRows(data.session.user.id)
+    if (data.session?.user) {
+      await adoptGuestRows(data.session.user.id)
+      await pullProfile()
+    }
     kick()
   })
   window.addEventListener('online', kick)
@@ -54,4 +58,20 @@ export function normaliseBdPhone(input: string): string | null {
   const d = input.replace(/[০-৯]/g, (c) => String('০১২৩৪৫৬৭৮৯'.indexOf(c))).replace(/\D/g, '')
   const local = d.startsWith('880') ? d.slice(2) : d
   return /^01[3-9]\d{8}$/.test(local) ? `+88${local}` : null
+}
+
+/**
+ * Bring down the server copy of the profile. The server decides `role` (only admins can
+ * change it); other fields follow last-write-wins like everything else.
+ */
+export async function pullProfile() {
+  const sb = await getSupabase()
+  const uid = ((await db.kv.get('auth.user_id'))?.value as string | undefined) ?? null
+  if (!sb || !uid || !navigator.onLine) return
+  const { data } = await sb.from('profiles').select('*').eq('id', uid).maybeSingle()
+  if (!data) return
+  const local = await db.profiles.get(uid)
+  const merged = !local || data.updated_at > local.updated_at ? { ...local, ...data } : { ...local, role: data.role }
+  delete (merged as Record<string, unknown>).user_id
+  await db.profiles.put({ ...merged, user_id: uid })
 }

@@ -23,7 +23,7 @@ export default function Settings() {
     if (!window.confirm(t('settings.resetConfirm'))) return
     await db.delete()
     localStorage.clear()
-    location.replace('/')
+    location.replace(import.meta.env.BASE_URL)
   }
 
   return (
@@ -84,6 +84,10 @@ export default function Settings() {
         {installed ? <p>{t('settings.installed')}</p> : <p className="text-sm text-muted">{t('settings.installHint')}</p>}
         {canInstall && <button className="btn-primary" onClick={install}>{t('settings.install')}</button>}
       </section>
+
+      {(profile?.role === 'admin' || !supabaseConfigured) && (
+        <Link to="/admin" className="btn-ghost">{t('admin.open')}</Link>
+      )}
 
       <button className="btn-link self-start text-danger" onClick={reset}>{t('settings.reset')}</button>
       <p className="text-sm text-muted">{t('settings.version', { v: __APP_VERSION__ })}</p>

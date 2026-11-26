@@ -1,7 +1,24 @@
 {
-  "app": { "name": "Alo", "tagline": "One lesson at a time", "skip": "Skip to main content" },
-  "nav": { "home": "Home", "subjects": "Subjects", "exam": "Exam", "focus": "Focus", "tutor": "Tutor", "settings": "Settings", "main": "Main navigation" },
-  "lang": { "toggle": "বাংলায় দেখুন", "short": "বাং", "bn": "বাংলা", "en": "English" },
+  "app": {
+    "name": "Alo",
+    "tagline": "One lesson at a time",
+    "skip": "Skip to main content"
+  },
+  "nav": {
+    "home": "Home",
+    "subjects": "Subjects",
+    "exam": "Exam",
+    "focus": "Focus",
+    "tutor": "Tutor",
+    "settings": "Settings",
+    "main": "Main navigation"
+  },
+  "lang": {
+    "toggle": "বাংলায় দেখুন",
+    "short": "বাং",
+    "bn": "বাংলা",
+    "en": "English"
+  },
   "net": {
     "offline": "You're offline. Keep studying; everything saves when you're back online.",
     "pending_one": "{{count}} change waiting to sync",
@@ -58,11 +75,23 @@
     "done": "Great! Your study space is ready."
   },
   "board": {
-    "dhaka": "Dhaka", "rajshahi": "Rajshahi", "chattogram": "Chattogram", "cumilla": "Cumilla",
-    "jashore": "Jashore", "barishal": "Barishal", "sylhet": "Sylhet", "dinajpur": "Dinajpur",
-    "mymensingh": "Mymensingh", "madrasah": "Madrasah", "technical": "Technical"
+    "dhaka": "Dhaka",
+    "rajshahi": "Rajshahi",
+    "chattogram": "Chattogram",
+    "cumilla": "Cumilla",
+    "jashore": "Jashore",
+    "barishal": "Barishal",
+    "sylhet": "Sylhet",
+    "dinajpur": "Dinajpur",
+    "mymensingh": "Mymensingh",
+    "madrasah": "Madrasah",
+    "technical": "Technical"
   },
-  "group": { "science": "Science", "business": "Business Studies", "humanities": "Humanities" },
+  "group": {
+    "science": "Science",
+    "business": "Business Studies",
+    "humanities": "Humanities"
+  },
   "home": {
     "hello": "Good day",
     "daysToFirst_one": "{{count}} day to your first paper",
@@ -86,9 +115,19 @@
     "mastery": "Mastery {{n}}%",
     "chaptersSoon": "Chapters are being added soon."
   },
-  "exam": { "title": "Exam centre", "soon": "Model tests and the routine are coming here.", "routine": "Exam routine" },
-  "focus": { "title": "Focus", "soon": "The Pomodoro timer is coming here." },
-  "tutor": { "title": "AI tutor", "soon": "A tutor you can ask questions is coming here. It needs internet." },
+  "exam": {
+    "title": "Exam centre",
+    "soon": "Model tests and the routine are coming here.",
+    "routine": "Exam routine"
+  },
+  "focus": {
+    "title": "Focus",
+    "soon": "The Pomodoro timer is coming here."
+  },
+  "tutor": {
+    "title": "AI tutor",
+    "soon": "A tutor you can ask questions is coming here. It needs internet."
+  },
   "settings": {
     "title": "Settings",
     "language": "App language",
@@ -116,6 +155,183 @@
     "resetConfirm": "Are you sure? All progress saved in guest mode will be erased.",
     "version": "Version {{v}}"
   },
-  "common": { "close": "Close", "cancel": "Cancel", "ok": "OK", "loading": "Loading…", "comingSoon": "Coming soon", "yes": "Yes", "no": "No" },
-  "notFound": { "title": "Page not found", "home": "Back to home" }
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "loading": "Loading…",
+    "comingSoon": "Coming soon",
+    "yes": "Yes",
+    "no": "No",
+    "percent": "{{n}}%"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "home": "Back to home"
+  },
+  "chapter": {
+    "number": "Chapter {{n}}",
+    "sections": "Chapter sections",
+    "tab": {
+      "learn": "Learn",
+      "mcq": "MCQ",
+      "cq": "CQ",
+      "board": "Board questions",
+      "notes": "Notes"
+    },
+    "lessonsN_one": "{{count}} lesson",
+    "lessonsN_other": "{{count}} lessons",
+    "mcqN_one": "{{count}} MCQ",
+    "mcqN_other": "{{count}} MCQs",
+    "boardN_one": "{{count}} board question",
+    "boardN_other": "{{count}} board questions",
+    "asked_one": "Asked {{count}} time in the last 5 years",
+    "asked_other": "Asked {{count}} times in the last 5 years",
+    "contentSoon": "Lessons for this chapter are coming soon.",
+    "offlineNotDownloaded": "This chapter isn't downloaded yet. Open it when you have internet.",
+    "minutes": "{{n}} min",
+    "start": "Start",
+    "practise": "Start practice",
+    "noLessons": "No lessons in this chapter yet.",
+    "noCq": "No creative questions in this chapter yet.",
+    "noBoard": "Board questions for this chapter are being added soon.",
+    "noNotes": "No notes for this chapter yet."
+  },
+  "mcq": {
+    "single": "Single answer",
+    "multi": "Multiple completion",
+    "situation": "Situation-based",
+    "correct": "Correct!",
+    "wrong": "Not this time. The answer is ({{label}}).",
+    "correctMark": "correct answer",
+    "wrongMark": "your answer, wrong"
+  },
+  "cq": {
+    "title": "Creative question {{n}}",
+    "marks": "{{n}} marks",
+    "reveal": "Show model answer",
+    "hide": "Hide model answer",
+    "writeFirst": "Write your answer on paper first, then compare.",
+    "modelFor": "({{part}}) Model answer",
+    "rubric": "How marks are given",
+    "points": "{{n}} mark(s):"
+  },
+  "admin": {
+    "title": "Content admin",
+    "denied": "This area is for admins only.",
+    "localMode": "Local mode: no online database is connected yet. Changes stay in this browser and show up in the student screens for preview. Export JSON to keep them.",
+    "entity": {
+      "subjects": "Subjects",
+      "chapters": "Chapters",
+      "lessons": "Lessons",
+      "questions": "Questions",
+      "drill_templates": "Drill templates",
+      "method_sheets": "Method sheets",
+      "notices": "Notices",
+      "exam_config": "Exam config",
+      "routine": "Routine"
+    },
+    "field": {
+      "code": "Code",
+      "name_bn": "Name (Bangla)",
+      "name_en": "Name (English)",
+      "groups": "Groups",
+      "is_compulsory": "Compulsory",
+      "mark_scheme": "Mark scheme",
+      "has_practical": "Has practical",
+      "sort": "Order",
+      "subject_code": "Subject",
+      "number": "Number",
+      "title_bn": "Title (Bangla)",
+      "title_en": "Title (English)",
+      "syllabus_year": "Syllabus year",
+      "board_freq_5y": "Board questions, last 5 years",
+      "chapter_id": "Chapter",
+      "medium": "Version",
+      "duration_s": "Duration (s)",
+      "size_bytes": "Size (bytes)",
+      "version": "Version no.",
+      "published": "Published",
+      "kind": "Kind",
+      "subtype": "Type",
+      "stem": "Question",
+      "options_json": "Options (JSON)",
+      "answer_json": "Answer (JSON)",
+      "explanation": "Explanation",
+      "marks_json": "Parts and marks (JSON)",
+      "source": "Source",
+      "board": "Board",
+      "year": "Year",
+      "difficulty": "Difficulty (1-5)",
+      "tags": "Tags",
+      "title": "Title",
+      "vars_json": "Variables (JSON)",
+      "constraints_json": "Constraints (JSON)",
+      "solution_js": "Solution script",
+      "question_type": "Question type",
+      "body_md": "Body (Markdown)",
+      "body": "Body",
+      "event_date": "Event date",
+      "source_url": "Source link",
+      "last_checked": "Last checked",
+      "verified": "Verified",
+      "exam_year": "Exam year",
+      "written_start": "Written start",
+      "written_end": "Written end",
+      "practical_start": "Practical start",
+      "practical_end": "Practical end",
+      "results_date": "Results date",
+      "status": "Status",
+      "date": "Date",
+      "paper": "Paper",
+      "start_time": "Start time",
+      "duration_min": "Duration (min)"
+    },
+    "scene": {
+      "type": "Scene type",
+      "title": "Title",
+      "bullets": "Bullet points (one per line, $math$ allowed)",
+      "tex": "Formula (LaTeX)",
+      "svg": "Diagram (SVG)",
+      "problem": "Problem",
+      "steps": "Steps (one per line; start with tex: for a formula)",
+      "stem": "Question",
+      "option": "Option",
+      "correct": "Correct answer",
+      "explanation": "Explanation",
+      "captions": "Narration / captions",
+      "audio": "Narration audio (Opus or AAC, mono, 24-32 kbps)",
+      "preview": "Preview"
+    },
+    "new": "New",
+    "search": "Search",
+    "showing": "Showing {{shown}} of {{total}}",
+    "save": "Save",
+    "saved": "Saved.",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this for sure?",
+    "fixErrors": "Please fix the fields marked in red.",
+    "err": {
+      "required": "This field is required.",
+      "json": "This is not valid JSON."
+    },
+    "edit": "Edit",
+    "scenes": "Scenes",
+    "addScene": "Add a scene",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "audioUploaded": "Audio attached. Remember to save.",
+    "csvImport": "Import questions from CSV",
+    "csvHelp": "The first line must hold the column names. Each line is checked on its own; only valid lines are imported.",
+    "csvTemplate": "Download sample CSV",
+    "csvFile": "CSV file",
+    "csvSummary": "{{ok}} valid, {{bad}} with problems",
+    "csvLine": "Line {{n}}:",
+    "csvImportN": "Import {{n}} questions",
+    "csvDone": "Imported {{n}} questions.",
+    "export": "Export all content as JSON",
+    "discard": "Discard local changes",
+    "discardConfirm": "All content changes in this browser will be erased and published content reloaded.",
+    "open": "Open content admin"
+  }
 }

@@ -1,5 +1,8 @@
 import Dexie, { type Table } from 'dexie'
 import type { Board, Group, Lang, Medium } from '../data/catalog'
+import type {
+  ChapterRow, DrillTemplateRow, LessonRow, MethodSheetRow, NoticeRow, QuestionRow, SceneRow, SubjectRow,
+} from '../data/content-types'
 
 /** Every synced record carries these. `user_id` is null while in guest mode. */
 export interface SyncedRow {
@@ -43,6 +46,17 @@ export interface OutboxItem {
 
 export interface KV { key: string; value: unknown }
 
+export interface PackRecord {
+  key: string
+  chapter_id: string
+  medium: Medium
+  version: string
+  bytes: number
+  /** true when the student pressed "Download for offline" (vs. cached while browsing) */
+  pinned: boolean
+  fetched_at: string
+}
+
 export class AloDB extends Dexie {
   kv!: Table<KV, string>
   profiles!: Table<LocalProfile, string>
@@ -54,6 +68,17 @@ export class AloDB extends Dexie {
   plan_items!: Table<SyncedRow & Record<string, unknown>, string>
   events!: Table<SyncedRow & Record<string, unknown>, string>
   outbox!: Table<OutboxItem, number>
+  // Content cache (read-only for students; the admin CMS writes it in local mode).
+  c_subjects!: Table<SubjectRow, string>
+  c_chapters!: Table<ChapterRow, string>
+  c_lessons!: Table<LessonRow, string>
+  c_scenes!: Table<SceneRow, string>
+  c_questions!: Table<QuestionRow, string>
+  c_method_sheets!: Table<MethodSheetRow, string>
+  c_drills!: Table<DrillTemplateRow, string>
+  c_notices!: Table<NoticeRow, string>
+  /** Downloaded chapter packs: key `${chapter_id}.${medium}` */
+  c_packs!: Table<PackRecord, string>
 
   constructor(name = 'alo') {
     super(name)
@@ -68,6 +93,17 @@ export class AloDB extends Dexie {
       plan_items: 'id, user_id, date',
       events: 'id, user_id, created_at',
       outbox: '++seq, [table+row_id], next_at',
+    })
+    this.version(2).stores({
+      c_subjects: 'code',
+      c_chapters: 'id, subject_code',
+      c_lessons: 'id, chapter_id, [chapter_id+medium]',
+      c_scenes: 'id, lesson_id',
+      c_questions: 'id, chapter_id, [chapter_id+medium], [chapter_id+kind]',
+      c_method_sheets: 'id, subject_code, chapter_id',
+      c_drills: 'id, chapter_id',
+      c_notices: 'id, event_date',
+      c_packs: 'key, chapter_id',
     })
   }
 }

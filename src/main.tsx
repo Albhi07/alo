@@ -5,6 +5,7 @@ import './i18n'
 import App from './App'
 import { applyTheme, usePrefs } from './state/prefs'
 import { startAuthAndSync } from './state/auth'
+import { refreshIndex } from './content/repo'
 
 void usePrefs // keep prefs module (and its theme listener) loaded
 try {
@@ -19,3 +20,8 @@ createRoot(document.getElementById('root')!).render(
 )
 
 startAuthAndSync()
+
+// Keep the content cache (subjects, chapters, exam dates) fresh whenever we're online.
+const refresh = () => { if (navigator.onLine) refreshIndex().catch(() => { /* try again later */ }) }
+refresh()
+window.addEventListener('online', refresh)

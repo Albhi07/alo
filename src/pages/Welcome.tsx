@@ -7,7 +7,7 @@ export default function Welcome() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-3 pt-4 text-center">
-        <img src="/icon.svg" alt="" width="88" height="88" />
+        <img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" width="88" height="88" />
         <p className="text-lg font-semibold text-muted">{t('app.tagline')}</p>
         <h1 className="text-[26px] font-semibold leading-tight">{t('welcome.title')}</h1>
         <p className="text-muted">{t('welcome.body')}</p>

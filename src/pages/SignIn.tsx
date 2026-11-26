@@ -41,7 +41,7 @@ export default function SignIn() {
     } else {
       if (!/^\S+@\S+\.\S+$/.test(value.trim())) return setError(t('auth.invalidEmail'))
       setBusy(true)
-      const { error } = await sb.auth.signInWithOtp({ email: value.trim(), options: { emailRedirectTo: location.origin } })
+      const { error } = await sb.auth.signInWithOtp({ email: value.trim(), options: { emailRedirectTo: location.origin + import.meta.env.BASE_URL } })
       setBusy(false)
       if (error) return setError(t('auth.error'))
       setSent(true)

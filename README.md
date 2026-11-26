@@ -11,8 +11,8 @@ first-load JavaScript, lessons as narrated scenes instead of video.
 | Milestone | Scope | State |
 |---|---|---|
 | M1 | App shell, i18n (bn/en), auth + guest mode, onboarding, PWA, offline banner | done |
-| M2 | Content model, admin CMS, seed data, subjects/chapters | next |
-| M3 | Lesson player, offline download, data saver | |
+| M2 | Content model, admin CMS, seed data, subjects/chapters | done |
+| M3 | Lesson player, offline download, data saver | next |
 | M4 | MCQ, SRS, drill generators, board questions, method sheets | |
 | M5 | Exam centre, timed mocks, readiness and predicted GPA | |
 | M6 | Study plan, Focus timer, streaks, notices + web push | |
@@ -34,6 +34,23 @@ Without Supabase settings the app runs fully in guest mode (everything in Indexe
 To enable sign-in and sync, copy `.env.example` to `.env.local` and fill in the project
 URL and anon key. The service-role key and the Anthropic API key are Supabase secrets
 and must never be put in the client.
+
+## Content
+
+- Seed content is authored in `content/` as TypeScript (`{ bn, en }` text, written once per
+  language). `npx tsx scripts/build-content.ts` validates it (4 options per MCQ, CQ rubrics
+  add up to the marks, 8-10 scenes per lesson with a check question every 2-3 scenes) and
+  writes `public/content/` (offline packs) and `supabase/seed.sql`.
+- The admin CMS lives at `/admin`. With Supabase it edits the tables (admins only, enforced by
+  RLS). Without Supabase it runs in local mode: edits stay in the browser, show up in the
+  student screens, and can be exported as JSON.
+- Question bulk import: `/admin/import` takes a CSV (template downloadable there); every row
+  is validated and only valid rows are imported.
+
+## Live preview
+
+Every push to `main` or a milestone branch (`m*`) deploys to GitHub Pages at
+https://albhi07.github.io/alo/ (Settings → Pages → Source must be "GitHub Actions").
 
 ## How it fits together
 
