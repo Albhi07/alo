@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useT } from '../i18n'
 import { useProfile, subjectsFor } from '../state/profile'
@@ -8,6 +9,11 @@ import { daysBetween } from '../lib/format'
 import { FlameIcon } from '../components/icons'
 import { useLastLesson } from '../state/lessonProgress'
 import { useReadiness } from '../state/readiness'
+import { ensurePlan, usePlan } from '../state/plan'
+import { useStudyStats } from '../state/focus'
+import { PlanList } from '../components/PlanList'
+import { useUpcomingNotices } from '../state/notices'
+import { todayIso } from '../lib/format'
 
 export default function Home() {
   const { t, lang, date, n } = useT()
@@ -15,6 +21,11 @@ export default function Home() {
   const { routine: allRoutine, config } = useExamData()
   const last = useLastLesson()
   const readiness = useReadiness(profile)
+  const today = todayIso()
+  const plan = usePlan(today, 1)
+  const stats = useStudyStats()
+  const notices = useUpcomingNotices(14)
+  useEffect(() => { if (profile) void ensurePlan(profile) }, [profile])
   if (!profile) return null
   const gpa = readiness?.gpa
   const fmt = (x: number) => n(x.toFixed(2))
@@ -47,11 +58,11 @@ export default function Home() {
       <div className="grid grid-cols-2 gap-3">
         <section className="card">
           <h2 className="flex items-center gap-1 text-sm font-semibold text-muted"><FlameIcon className="h-4 w-4" />{t('home.streak')}</h2>
-          <p className="text-2xl font-semibold">{t('home.streakDays', { count: 0 })}</p>
+          <p className="text-2xl font-semibold">{t('home.streakDays', { count: stats?.streak.days ?? 0 })}</p>
         </section>
         <section className="card">
           <h2 className="text-sm font-semibold text-muted">{t('home.target')}</h2>
-          <p className="text-2xl font-semibold">{n(0)} / {t('onb.hours', { n: profile.daily_target_min / 60 })}</p>
+          <p className="text-2xl font-semibold">{n(((stats?.today ?? 0) / 60).toFixed(1))} / {t('onb.hours', { n: profile.daily_target_min / 60 })}</p>
         </section>
       </div>
 
@@ -65,9 +76,21 @@ export default function Home() {
       </Link>
 
       <section className="card">
-        <h2 className="text-lg font-semibold">{t('home.todayPlan')}</h2>
-        <p className="text-muted">{t('home.planSoon')}</p>
+        <div className="mb-2 flex items-baseline justify-between">
+          <h2 className="text-lg font-semibold">{t('home.todayPlan')}</h2>
+          <Link to="/plan" className="text-sm underline underline-offset-4">{t('home.fullPlan')}</Link>
+        </div>
+        {plan?.length ? <PlanList items={plan} editable={false} /> : <p className="text-muted">{t('home.planEmpty')}</p>}
       </section>
+
+      {!!notices?.length && (
+        <Link to="/notices" className="card flex flex-col gap-1">
+          <h2 className="text-sm font-semibold text-muted">{t('notices.upcoming')}</h2>
+          {notices.slice(0, 2).map((x) => (
+            <p key={x.id} className="font-semibold">{lang === 'bn' ? x.title_bn : x.title_en}{x.event_date ? ` · ${date(x.event_date)}` : ''}</p>
+          ))}
+        </Link>
+      )}
 
       <section className="card">
         <h2 className="text-lg font-semibold">{t('home.continue')}</h2>

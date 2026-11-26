@@ -11,6 +11,7 @@ import { audioUrl } from '../content/offline'
 import { ensureChapter } from '../content/repo'
 import { getPosition, loadSpeed, saveSpeed, savePosition, SPEEDS, type Speed } from '../state/lessonProgress'
 import { recomputeMastery } from '../state/practice'
+import { completeMatching } from '../state/plan'
 import { logEvent } from '../state/events'
 import { BackIcon, ReplayIcon } from '../components/icons'
 
@@ -102,6 +103,7 @@ export default function LessonPlayer() {
     const qs = scenes.filter((s) => s.type === 'question')
     const right = qs.filter((s) => answers[s.id] === s.body_json.question?.answer).length
     await recomputeMastery(lesson!.chapter_id, lesson!.medium)
+    await completeMatching('lesson', lesson!.chapter_id)
     await logEvent('lesson_completed', { lesson_id: lesson!.id, checks: qs.length, right })
     setFinished(true)
   }

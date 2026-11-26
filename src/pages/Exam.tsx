@@ -29,7 +29,10 @@ export default function Exam() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold">{t('exam.title')}</h1>
+      <div className="flex items-baseline justify-between gap-2">
+        <h1 className="text-2xl font-semibold">{t('exam.title')}</h1>
+        <Link to="/notices" className="text-sm underline underline-offset-4">{t('notices.title')}</Link>
+      </div>
 
       {session && (
         <Link to={`/exam/mock/${session.mock_id}`} className="card flex items-center justify-between gap-3 border-2 border-accent">

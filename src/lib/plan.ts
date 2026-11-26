@@ -85,9 +85,13 @@ export function generatePlan(input: PlanInput): PlanTask[] {
     const n = Math.min(5, Math.max(3, Math.round(input.dailyMinutes / 40)))
     const minutes = round5(input.dailyMinutes / n)
     const usedToday = new Set<string>()
+    // Mix subjects: at most 2 tasks a day from one subject when there's a choice.
+    const perSubject = new Map<string, number>()
+    const cap = Math.max(2, Math.ceil(n / pool.length))
     for (let slot = 0; slot < n; slot++) {
       let best: { s: PlanSubject; c: PlanChapter; w: number } | null = null
       for (const s of pool) {
+        if ((perSubject.get(s.code) ?? 0) >= cap) continue
         const daysLeft = Math.max(1, dayDiff(date, paperOf.get(s.code)!))
         const urgency = 1 + 20 / daysLeft
         for (const c of s.chapters) {
@@ -99,6 +103,7 @@ export function generatePlan(input: PlanInput): PlanTask[] {
       if (!best) break
       const { s, c } = best
       usedToday.add(c.id)
+      perSubject.set(s.code, (perSubject.get(s.code) ?? 0) + 1)
       let kind: PlanKind
       if (c.lessonPending && !lessonDone.has(c.id)) { kind = 'lesson'; lessonDone.add(c.id) } else {
         const k = kindCount.get(c.id) ?? 0

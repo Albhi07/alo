@@ -41,6 +41,7 @@ describe('study plan', () => {
     expect(day1.reduce((t, x) => t + x.minutes, 0)).toBeGreaterThanOrEqual(170)
     expect(day1[0]).toMatchObject({ ref_id: 'm1', kind: 'lesson' }) // weak, asked 4 times
     expect(new Set(day1.map((t) => t.ref_id)).size).toBe(day1.length)
+    expect(new Set(day1.map((t) => t.subject_code)).size).toBeGreaterThan(1) // subjects are mixed
   })
 
   it('schedules timed mocks for subjects that have one', () => {

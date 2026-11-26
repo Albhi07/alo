@@ -37,6 +37,8 @@ export default defineConfig({
       workbox: {
         // Take control on first install so the app works offline right after the first visit.
         clientsClaim: true,
+        // Push notification handlers (exam reminders).
+        importScripts: ['push-sw.js'],
         // App shell: all built JS/CSS/HTML plus Bengali+Latin font subsets.
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         // Sign-in and sync only run online, so supabase-js is fetched when needed.
