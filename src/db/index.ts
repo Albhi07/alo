@@ -55,6 +55,8 @@ export interface PackRecord {
   /** true when the student pressed "Download for offline" (vs. cached while browsing) */
   pinned: boolean
   fetched_at: string
+  /** narration + font bytes cached for this pack when downloaded */
+  audio_bytes?: number
 }
 
 export class AloDB extends Dexie {

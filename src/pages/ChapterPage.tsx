@@ -9,6 +9,7 @@ import { Tabs } from '../components/ui/Tabs'
 import { BackIcon } from '../components/icons'
 import { CqCard } from '../components/content/CqCard'
 import { Rich } from '../components/content/Rich'
+import { DownloadButton } from '../components/content/DownloadButton'
 
 const TABS = ['learn', 'mcq', 'cq', 'board', 'notes'] as const
 type Tab = (typeof TABS)[number]
@@ -51,6 +52,8 @@ export default function ChapterPage() {
         <h1 className="text-2xl font-semibold leading-tight">{lang === 'bn' ? chapter.title_bn : chapter.title_en}</h1>
         {chapter.board_freq_5y > 0 && <p className="mt-1 text-sm font-semibold">{t('chapter.asked', { count: chapter.board_freq_5y })}</p>}
       </div>
+
+      {content && !empty && <DownloadButton chapterId={chapter.id} medium={medium} />}
 
       <Tabs<Tab>
         label={t('chapter.sections')}

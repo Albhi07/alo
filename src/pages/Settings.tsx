@@ -8,6 +8,7 @@ import { useInstall } from '../hooks/useInstall'
 import { subjectByCode, type Lang } from '../data/catalog'
 import { db } from '../db'
 import { supabaseConfigured } from '../lib/supabase'
+import { DownloadsSection } from '../components/content/DownloadsSection'
 
 export default function Settings() {
   const { t, lang } = useT()
@@ -56,6 +57,8 @@ export default function Settings() {
           className="h-7 w-7 accent-[rgb(var(--accent))]"
         />
       </label>
+
+      <DownloadsSection />
 
       {profile && (
         <section className="card flex flex-col gap-1" aria-labelledby="profile-h">

@@ -12,8 +12,8 @@ first-load JavaScript, lessons as narrated scenes instead of video.
 |---|---|---|
 | M1 | App shell, i18n (bn/en), auth + guest mode, onboarding, PWA, offline banner | done |
 | M2 | Content model, admin CMS, seed data, subjects/chapters | done |
-| M3 | Lesson player, offline download, data saver | next |
-| M4 | MCQ, SRS, drill generators, board questions, method sheets | |
+| M3 | Lesson player, offline download, data saver | done |
+| M4 | MCQ, SRS, drill generators, board questions, method sheets | next |
 | M5 | Exam centre, timed mocks, readiness and predicted GPA | |
 | M6 | Study plan, Focus timer, streaks, notices + web push | |
 | M7 | AI tutor Edge Function, photo marking, rate limits | |
@@ -44,6 +44,9 @@ and must never be put in the client.
 - The admin CMS lives at `/admin`. With Supabase it edits the tables (admins only, enforced by
   RLS). Without Supabase it runs in local mode: edits stay in the browser, show up in the
   student screens, and can be exported as JSON.
+- Narration: `build-content.ts` makes placeholder audio with espeak-ng (Opus, mono, 24 kbps,
+  about 3 KB per second) when `espeak-ng` and `ffmpeg` are installed, and fails the build if a
+  lesson goes over 3 MB per 10 minutes. Real recordings replace it through the scene editor.
 - Question bulk import: `/admin/import` takes a CSV (template downloadable there); every row
   is validated and only valid rows are imported.
 
