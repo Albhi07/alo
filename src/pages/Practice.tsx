@@ -5,6 +5,7 @@ import { useProfile } from '../state/profile'
 import { useChapter } from '../content/repo'
 import type { QuestionRow } from '../data/content-types'
 import { buildQueue, recordMcqAnswer } from '../state/practice'
+import { completeMatching } from '../state/plan'
 import { McqOptions } from '../components/content/McqOptions'
 import { Rich } from '../components/content/Rich'
 import { BackIcon } from '../components/icons'
@@ -34,6 +35,9 @@ export default function Practice() {
     if (!chapterId || !profile) return
     buildQueue(chapterId, medium).then((q) => { requeued.current.clear(); setQueue(q); setPos(0); setChosen(null); setScore({ right: 0, answered: 0 }) })
   }, [chapterId, medium, profile, round])
+
+  const roundOver = !!queue?.length && pos >= queue.length
+  useEffect(() => { if (roundOver && chapterId) void completeMatching('mcq', chapterId) }, [roundOver, chapterId])
 
   const q = queue?.[pos]
   useEffect(() => { started.current = performance.now() }, [q?.id, pos])

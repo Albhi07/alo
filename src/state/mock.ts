@@ -4,6 +4,7 @@ import { saveLocal } from '../db/sync'
 import type { MockRow } from '../data/content-types'
 import { uuid } from '../lib/id'
 import { logEvent } from './events'
+import { completeMatching } from './plan'
 
 /**
  * A running mock exam. Only start times are stored (never a ticking counter), so the
@@ -144,6 +145,7 @@ export async function finishMarking(mock: MockRow) {
   // Kept on this device for the answer review on the result page.
   await kvSet(`mock.review.${s.result_id}`, { mock_id: s.mock_id, mcq_answers: s.mcq_answers, cq_chosen: s.cq_chosen, cq_marks: s.cq_marks })
   await put(null)
+  await completeMatching('mock', s.mock_id)
   await logEvent('mock_marked', { total: (s.mcq_score ?? 0) + score })
   return s.result_id
 }

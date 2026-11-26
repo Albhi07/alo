@@ -100,7 +100,6 @@
     "nextPaper": "Your next paper",
     "unverified": "Date not verified yet",
     "todayPlan": "Today's plan",
-    "planSoon": "Your study plan will appear here soon.",
     "streak": "Streak",
     "streakDays_one": "{{count}} day",
     "streakDays_other": "{{count}} days",
@@ -111,7 +110,9 @@
     "resume": "Resume",
     "lessonDone": "Lesson finished",
     "predicted": "Predicted GPA",
-    "predictedNone": "Practise to see it"
+    "predictedNone": "Practise to see it",
+    "fullPlan": "Full plan",
+    "planEmpty": "Your plan will appear once the routine and chapters are loaded."
   },
   "subjects": {
     "title": "My subjects",
@@ -152,7 +153,28 @@
   },
   "focus": {
     "title": "Focus",
-    "soon": "The Pomodoro timer is coming here."
+    "soon": "The Pomodoro timer is coming here.",
+    "timer": "Focus timer",
+    "mode": "Timer length",
+    "modeLabel": "{{work}} min + {{rest}} break",
+    "progress": "{{n}}% of this session done",
+    "working": "Focus",
+    "break": "Break",
+    "ready": "Ready",
+    "sessionDone": "Session saved. Take your break!",
+    "subject": "Subject",
+    "anySubject": "Any subject",
+    "start": "Start focus",
+    "stop": "Stop and save",
+    "skipBreak": "Skip break",
+    "keepsRunning": "The timer keeps going if you close the app.",
+    "restUsed": "Rest day used this week",
+    "today": "Today",
+    "ofTarget": "{{done}} / {{target}} h",
+    "week": "Focus hours, last 7 days",
+    "hoursShort": "{{h}} h",
+    "minutesN": "{{n}} min",
+    "targetLine": "Dashed line: daily target ({{h}} h)"
   },
   "tutor": {
     "title": "AI tutor",
@@ -474,5 +496,43 @@
     "yourAnswer": "Your answer",
     "rightAnswer": "Right answer",
     "blank": "Left blank"
+  },
+  "plan": {
+    "title": "Study plan",
+    "how": "Planned to your papers: weak and often-asked chapters first, revision the day before each paper, one rest day a week. It updates itself each day.",
+    "replanned_one": "{{count}} task from earlier days was missed. Today's plan has been worked out again.",
+    "replanned_other": "{{count}} tasks from earlier days were missed. Today's plan has been worked out again.",
+    "rebuild": "Plan again",
+    "today": "Today",
+    "exam": "Exam: {{subject}}",
+    "empty": "Nothing planned.",
+    "kind": {
+      "lesson": "Lesson",
+      "mcq": "MCQ practice",
+      "cq": "CQ practice",
+      "mock": "Model test",
+      "revision": "Revision",
+      "rest": "Rest day"
+    },
+    "restHint": "Rest well, you've earned it",
+    "go": "Go",
+    "markDone": "Mark done: {{task}}",
+    "removeTask": "Remove: {{task}}"
+  },
+  "notices": {
+    "title": "Notices",
+    "upcoming": "Coming up",
+    "none": "No notices yet.",
+    "verified": "Verified",
+    "checked": "Last checked {{date}}",
+    "source": "Source",
+    "push": "Exam reminders on this phone",
+    "pushHint": "We'll remind you 3 days and 1 day before each verified date.",
+    "inAppOnly": "Reminders show here and on Home.",
+    "pushErr": {
+      "denied": "Notifications are blocked in your browser settings.",
+      "signin": "Sign in to get reminders.",
+      "error": "Couldn't turn on reminders. Try again later."
+    }
   }
 }
