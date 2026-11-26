@@ -7,13 +7,17 @@ import { subjectByCode } from '../data/catalog'
 import { daysBetween } from '../lib/format'
 import { FlameIcon } from '../components/icons'
 import { useLastLesson } from '../state/lessonProgress'
+import { useReadiness } from '../state/readiness'
 
 export default function Home() {
   const { t, lang, date, n } = useT()
   const profile = useProfile()
   const { routine: allRoutine, config } = useExamData()
   const last = useLastLesson()
+  const readiness = useReadiness(profile)
   if (!profile) return null
+  const gpa = readiness?.gpa
+  const fmt = (x: number) => n(x.toFixed(2))
 
   const now = new Date()
   const routine = allRoutine.filter((r) => r.exam_year === config.exam_year)
@@ -50,6 +54,15 @@ export default function Home() {
           <p className="text-2xl font-semibold">{n(0)} / {t('onb.hours', { n: profile.daily_target_min / 60 })}</p>
         </section>
       </div>
+
+      <Link to="/exam" className="card flex items-center justify-between gap-3">
+        <span className="text-sm font-semibold text-muted">{t('home.predicted')}</span>
+        <span className="text-xl font-semibold">
+          {!gpa ? <span className="text-base font-normal text-muted">{t('home.predictedNone')}</span>
+            : gpa.fail ? t('exam.atRisk')
+            : gpa.low === gpa.high ? fmt(gpa.mid) : t('exam.range', { low: fmt(gpa.low), high: fmt(gpa.high) })}
+        </span>
+      </Link>
 
       <section className="card">
         <h2 className="text-lg font-semibold">{t('home.todayPlan')}</h2>

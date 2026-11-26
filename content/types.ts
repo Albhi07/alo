@@ -56,3 +56,21 @@ export interface DrillSrc {
     steps: Bi[]
   }
 }
+
+/** Mock paper CQ: parts carry their own marks (Maths: ক 2, খ 4, গ 4). */
+export interface MockCqPartSrc { part: 'a' | 'b' | 'c' | 'd'; marks: number; prompt: Bi; model: Bi; rubric: { points: number; criterion: Bi }[] }
+export interface MockCqSrc { key: string; stem: Bi; parts: MockCqPartSrc[] }
+
+export interface MockSrc {
+  key: string
+  subject_code: string
+  title: Bi
+  exam_year: number
+  duration_mcq_min: number
+  duration_cq_min: number
+  marks: { mcq: number; cq: number; practical?: number }
+  /** How many CQs to answer, and the minimum from each section. */
+  cq_rules: { answer: number; min_per_section: number }
+  mcqs: McqSrc[]
+  sections: { key: string; title: Bi; cqs: MockCqSrc[] }[]
+}

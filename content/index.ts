@@ -1,3 +1,5 @@
+import { mathMock01 } from './math-109/mock-01'
+import type { MockSrc } from './types'
 // Registry of authored chapter content. Add a chapter folder and list it here.
 import type { CqSrc, DrillSrc, LessonSrc, McqSrc, MethodSheetSrc } from './types'
 import { lesson as algLesson } from './math-109/ch03-algebraic-expressions/lesson'
@@ -21,3 +23,5 @@ export const CHAPTER_CONTENT: ChapterContent[] = [
   { subject_code: '109', number: 3, lessons: [algLesson], mcqs: algMcqs, cqs: algCqs, methodSheets: algMethod, drills: algDrills },
   { subject_code: '136', number: 2, lessons: [], mcqs: [], cqs: [], methodSheets: [], drills: motionDrills },
 ]
+
+export const MOCKS: MockSrc[] = [mathMock01]

@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db, kvGet, kvSet } from '../db'
 import type { Medium } from '../data/catalog'
-import type { ChapterPack, ContentIndex } from '../data/content-types'
+import type { ChapterPack, ContentIndex, MockSummary } from '../data/content-types'
 import { supabaseConfigured } from '../lib/supabase'
 import { staticSource, supabaseSource, type ContentSource } from './source'
 
@@ -50,6 +50,7 @@ export async function applyIndex(idx: ContentIndex) {
     await kvSet('exam.all_configs', idx.exam_config)
     await kvSet('exam.routine', idx.routine)
     await kvSet('content.packs', idx.packs)
+    await kvSet('content.mocks', idx.mocks ?? [])
     await kvSet('content.index_version', idx.version)
   })
 }
@@ -128,4 +129,26 @@ export function useChapterContent(chapterId: string | undefined, medium: Medium)
     ])
     return { lessons, questions, sheets, drills, pack }
   }, [chapterId, medium])
+}
+
+/** Mock papers listed in the index (whether or not they are downloaded yet). */
+export function useMockList() {
+  return useLiveQuery(() => kvGet<MockSummary[]>('content.mocks', []), [], [] as MockSummary[])
+}
+
+/** Fetch a mock paper into IndexedDB unless the cached copy is current. Works offline once fetched. */
+export async function ensureMock(id: string, source = activeSource()) {
+  const list = await kvGet<MockSummary[]>('content.mocks', [])
+  const want = list.find((m) => m.id === id)
+  const have = await db.c_mocks.get(id)
+  if (have && (!want || have.version === want.version)) return have
+  if (typeof navigator !== 'undefined' && !navigator.onLine && have) return have
+  const row = await source.mock(id)
+  const rec = { ...row, version: want?.version ?? row.updated_at ?? '' }
+  await db.c_mocks.put(rec)
+  return rec
+}
+
+export function useMock(id: string | undefined) {
+  return useLiveQuery(async () => (id ? (await db.c_mocks.get(id)) ?? null : undefined), [id])
 }

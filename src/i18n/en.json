@@ -109,7 +109,9 @@
     "nothingYet": "Pick a subject and start your first lesson.",
     "examOver": "This year's written exams are over. Watch the notices for results.",
     "resume": "Resume",
-    "lessonDone": "Lesson finished"
+    "lessonDone": "Lesson finished",
+    "predicted": "Predicted GPA",
+    "predictedNone": "Practise to see it"
   },
   "subjects": {
     "title": "My subjects",
@@ -120,7 +122,33 @@
   "exam": {
     "title": "Exam centre",
     "soon": "Model tests and the routine are coming here.",
-    "routine": "Exam routine"
+    "routine": "Exam routine",
+    "predicted": "Predicted GPA",
+    "noData": "Answer some questions or take a model test to see a prediction.",
+    "range": "{{low}} – {{high}}",
+    "atRisk": "At risk of failing a subject",
+    "basedOn": "Based on {{counted}} of {{total}} subjects so far.",
+    "notPromise": "This is a guide from your practice, not a promise.",
+    "raise": "What will raise this",
+    "tipMock": "Take a timed model test in {{subject}}",
+    "tipChapter": "Practise “{{chapter}}” ({{subject}})",
+    "readiness": "Readiness by subject",
+    "readinessOf": "Readiness {{n}} out of 100",
+    "fourth": "4th",
+    "notStarted": "Not started",
+    "mocks": "Model tests",
+    "noMocks": "Model tests for your subjects are coming soon.",
+    "mockTimes": "MCQ {{mcq}}, CQ {{cq}}",
+    "openMock": "Open",
+    "history": "Results",
+    "noResults": "Your model test results will appear here.",
+    "inProgress": "A model test is in progress",
+    "markPending": "Your CQ answers are waiting to be marked",
+    "unverified": "Unverified",
+    "routineSoon": "The routine will appear here.",
+    "result": "Result",
+    "grade": "Grade {{grade}} ({{point}})",
+    "seeReadiness": "See readiness and predicted GPA"
   },
   "focus": {
     "title": "Focus",
@@ -224,7 +252,8 @@
     "writeFirst": "Write your answer on paper first, then compare.",
     "modelFor": "({{part}}) Model answer",
     "rubric": "How marks are given",
-    "points": "{{n}} mark(s):"
+    "points": "{{n}} mark(s):",
+    "model": "Model answer"
   },
   "admin": {
     "title": "Content admin",
@@ -402,5 +431,48 @@
     "notNumber": "Type a number, for example 12, −3 or 3/4.",
     "hint": "You can type Bangla or English digits, and fractions like 3/4.",
     "solution": "Worked solution"
+  },
+  "mock": {
+    "notDownloaded": "This model test isn't on this phone yet. Open it once with internet.",
+    "mcqInfo": "Part 1, MCQ: {{n}} questions, {{marks}} marks, {{time}}.",
+    "cqInfo": "Part 2, CQ: {{n}} questions, answer {{answer}} (at least {{min}} from each section), {{marks}} marks, {{time}}.",
+    "rule1": "The MCQ part submits itself when its time is up, and the CQ part starts straight away.",
+    "rule2": "Write your CQ answers on paper, then mark them yourself with the model answers and rubrics.",
+    "rule3": "The timer keeps running if you close the app.",
+    "total": "Total {{marks}} marks.",
+    "start": "Start the exam",
+    "continue": "Continue",
+    "otherRunning": "Another model test is still running.",
+    "timeLeft": "Time left",
+    "mcqPart": "MCQ part",
+    "cqPart": "CQ part",
+    "answered": "{{n}} of {{total}} answered",
+    "questionN": "Question {{n}}",
+    "submitMcq": "Submit MCQ and start CQ",
+    "submitCq": "Submit CQ",
+    "confirmSubmit": "Tap again to submit",
+    "cqHow": "Answer {{answer}} questions on paper, at least {{min}} from each section. Tick the ones you answer.",
+    "chosen": "{{n}} of {{total}} chosen",
+    "iAnswered": "I answered this",
+    "problem": {
+      "tooMany": "Choose only {{answer}} questions.",
+      "section": "Take at least {{min}} from each section."
+    },
+    "markTitle": "Mark your answers",
+    "mcqScore": "MCQ: {{score}} / {{max}}",
+    "cqSoFar": "CQ so far: {{score}} / {{max}}",
+    "markHow": "For each part, read the model answer and tick each rubric point your answer earned. Be honest: it keeps your readiness score useful.",
+    "pickAnswered": "Which questions did you answer?",
+    "cqN": "Question {{n}}",
+    "remove": "Remove",
+    "finish": "Finish marking",
+    "skipMarking": "Mark later (save MCQ only)",
+    "unmarked": "Not marked",
+    "mcqOnly": "MCQ only",
+    "parts": "MCQ {{mcq}}/{{mcqMax}} · CQ {{cq}}",
+    "mcqReview": "MCQ answers",
+    "yourAnswer": "Your answer",
+    "rightAnswer": "Right answer",
+    "blank": "Left blank"
   }
 }
