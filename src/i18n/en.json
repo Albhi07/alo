@@ -197,7 +197,15 @@
     "noLessons": "No lessons in this chapter yet.",
     "noCq": "No creative questions in this chapter yet.",
     "noBoard": "Board questions for this chapter are being added soon.",
-    "noNotes": "No notes for this chapter yet."
+    "noNotes": "No notes for this chapter yet.",
+    "mastery": "Chapter mastery {{n}}%",
+    "print": "Print notes",
+    "filter": {
+      "board": "Board",
+      "year": "Year",
+      "type": "Type",
+      "all": "All"
+    }
   },
   "mcq": {
     "single": "Single answer",
@@ -369,5 +377,30 @@
     "meter": "Storage used",
     "used": "The app uses {{used}}; {{free}} more is available",
     "none": "No chapters downloaded yet."
+  },
+  "practice": {
+    "none": "No questions to practise in this chapter yet.",
+    "roundDone": "Round complete",
+    "result": "{{right}} of {{total}} right",
+    "allRight": "All right! These will come back for review in a few days.",
+    "reviewHint": "The ones you missed will come back sooner for review.",
+    "another": "Another round",
+    "progress": "Question {{n}} of {{total}}",
+    "score": "{{right}}/{{answered}} right",
+    "next": "Next",
+    "finish": "See result"
+  },
+  "drill": {
+    "title": "Drills",
+    "intro": "Fresh numbers every time. Type your answer, then check the worked solution.",
+    "back": "Back to chapter",
+    "broken": "This drill could not be loaded.",
+    "check": "Check",
+    "another": "New numbers",
+    "right": "Correct!",
+    "wrong": "Not quite. The answer is {{answer}}.",
+    "notNumber": "Type a number, for example 12, −3 or 3/4.",
+    "hint": "You can type Bangla or English digits, and fractions like 3/4.",
+    "solution": "Worked solution"
   }
 }

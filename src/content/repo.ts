@@ -108,6 +108,10 @@ export function useChapter(id: string | undefined) {
   return useLiveQuery(() => (id ? db.c_chapters.get(id) : undefined), [id])
 }
 
+export function useDrill(id: string | undefined) {
+  return useLiveQuery(async () => (id ? (await db.c_drills.get(id)) ?? null : undefined), [id])
+}
+
 export function usePackInfo() {
   return useLiveQuery(() => kvGet<ContentIndex['packs']>('content.packs', {}), [], {} as ContentIndex['packs'])
 }
@@ -115,12 +119,13 @@ export function usePackInfo() {
 export function useChapterContent(chapterId: string | undefined, medium: Medium) {
   return useLiveQuery(async () => {
     if (!chapterId) return undefined
-    const [lessons, questions, sheets, pack] = await Promise.all([
+    const [lessons, questions, sheets, drills, pack] = await Promise.all([
       db.c_lessons.where('[chapter_id+medium]').equals([chapterId, medium]).sortBy('sort'),
       db.c_questions.where('[chapter_id+medium]').equals([chapterId, medium]).toArray(),
       db.c_method_sheets.where('chapter_id').equals(chapterId).filter((m) => m.medium === medium).toArray(),
+      db.c_drills.where('chapter_id').equals(chapterId).toArray(),
       db.c_packs.get(`${chapterId}.${medium}`),
     ])
-    return { lessons, questions, sheets, pack }
+    return { lessons, questions, sheets, drills, pack }
   }, [chapterId, medium])
 }

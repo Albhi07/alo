@@ -220,9 +220,11 @@ create table public.srs_cards (
   due_on date not null,
   deleted boolean not null default false,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  unique (user_id, question_id)
+  updated_at timestamptz not null default now()
 );
+-- No unique (user_id, question_id): two offline phones may each create a card. Readers take
+-- the newest by updated_at, which keeps sync conflict-free.
+create index srs_cards_user_question on public.srs_cards (user_id, question_id, updated_at desc);
 
 create table public.mastery (
   id uuid primary key,
@@ -231,9 +233,9 @@ create table public.mastery (
   score numeric not null default 0 check (score between 0 and 100),
   deleted boolean not null default false,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  unique (user_id, chapter_id)
+  updated_at timestamptz not null default now()
 );
+create index mastery_user_chapter on public.mastery (user_id, chapter_id, updated_at desc);
 
 create table public.mock_results (
   id uuid primary key,

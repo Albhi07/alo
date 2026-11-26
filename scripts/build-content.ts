@@ -15,6 +15,7 @@ import type {
 import { CHAPTERS } from '../content/chapters'
 import { CHAPTER_CONTENT } from '../content/index'
 import { CQ_MARKS, type Bi, type SceneSrc } from '../content/types'
+import { generate } from '../src/lib/drill'
 
 const MEDIA = ['bn', 'en'] as const
 type M = (typeof MEDIA)[number]
@@ -138,7 +139,11 @@ for (const cc of CHAPTER_CONTENT) {
     const method_sheets: MethodSheetRow[] = cc.methodSheets.map((ms) => ({
       id: idFor(`ms:${ms.key}:${m}`), subject_code: cc.subject_code, chapter_id: cid, question_type: ms.question_type, medium: m, body_md: L(ms.body, m),
     }))
-    const body = { chapter_id: cid, medium: m, lessons, questions, method_sheets, drill_templates: [] }
+    const drill_templates = (cc.drills ?? []).map((d) => ({
+      id: idFor(`drill:${d.key}`), chapter_id: cid, title: d.title.en, vars_json: d.vars, constraints_json: d.constraints,
+      solution_js: JSON.stringify({ title: d.title, ...d.script }), version: 1,
+    }))
+    const body = { chapter_id: cid, medium: m, lessons, questions, method_sheets, drill_templates }
     packs.push({ ...body, version: hash(JSON.stringify(body)) })
   }
 }
@@ -165,6 +170,10 @@ for (const p of packs) {
     let gap = 0
     for (const s of l.scenes) { gap = s.type === 'question' ? 0 : gap + 1; if (gap > 3 && s.idx < n - 1) throw new Error(`${l.id}: no question near scene ${s.idx}`) }
   }
+}
+
+for (const p of packs) for (const d of p.drill_templates) {
+  for (let seed = 1; seed <= 50; seed++) for (const m of MEDIA) generate(d as never, m, seed)
 }
 
 // ---------------------------------------------------------------- write JSON
@@ -194,17 +203,18 @@ const index: ContentIndex = { version: hash(JSON.stringify(indexBody)), ...index
 writeFileSync('public/content/index.json', JSON.stringify(index))
 
 // ---------------------------------------------------------------- write SQL
-const lit = (v: unknown): string => {
+const lit = (v: unknown, col = ''): string => {
+  if (col.endsWith('_json') && v !== null && v !== undefined) return `${lit(JSON.stringify(v))}::jsonb`
   if (v === null || v === undefined) return 'null'
   if (typeof v === 'number' || typeof v === 'boolean') return String(v)
-  if (Array.isArray(v) && v.every((x) => typeof x === 'string')) return `array[${v.map(lit).join(',')}]::text[]`
+  if (Array.isArray(v) && v.every((x) => typeof x === 'string')) return `array[${v.map((x) => lit(x)).join(',')}]::text[]`
   if (typeof v === 'object') return `${lit(JSON.stringify(v))}::jsonb`
   return `'${String(v).replace(/'/g, "''")}'`
 }
 function insert(table: string, rows: object[], conflict: string): string {
   if (!rows.length) return ''
   const cols = Object.keys(rows[0])
-  const vals = rows.map((r) => `(${cols.map((c) => lit((r as Record<string, unknown>)[c])).join(', ')})`).join(',\n')
+  const vals = rows.map((r) => `(${cols.map((c) => lit((r as Record<string, unknown>)[c], c)).join(', ')})`).join(',\n')
   const upd = cols.filter((c) => !conflict.split(',').includes(c)).map((c) => `${c === 'group' ? '"group"' : c} = excluded.${c}`).join(', ')
   return `insert into public.${table} (${cols.join(', ')}) values\n${vals}\non conflict (${conflict}) do update set ${upd};\n\n`
 }
@@ -218,6 +228,7 @@ sql += insert('lessons', allLessons.map(({ scenes: _s, ...l }) => l), 'id')
 sql += insert('lesson_scenes', allLessons.flatMap((l) => l.scenes), 'id')
 sql += insert('questions', packs.flatMap((p) => p.questions), 'id')
 sql += insert('method_sheets', packs.flatMap((p) => p.method_sheets), 'id')
+sql += insert('drill_templates', [...new Map(packs.flatMap((p) => p.drill_templates).map((d) => [d.id, d])).values()], 'id')
 sql += 'commit;\n'
 writeFileSync('supabase/seed.sql', sql)
 

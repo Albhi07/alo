@@ -6,7 +6,7 @@ import type { ContentSource } from './source'
 import type { ChapterPack, ContentIndex } from '../data/content-types'
 
 const index: ContentIndex = JSON.parse(readFileSync('public/content/index.json', 'utf8'))
-const packFile = readdirSync('public/content/chapters').find((f) => f.endsWith('.bn.json'))!
+const packFile = readdirSync('public/content/chapters').find((f) => f.endsWith('.bn.json') && JSON.parse(readFileSync(`public/content/chapters/${f}`, 'utf8')).questions.length > 0)!
 const pack: ChapterPack = JSON.parse(readFileSync(`public/content/chapters/${packFile}`, 'utf8'))
 
 const source: ContentSource = { index: vi.fn(async () => index), chapterPack: vi.fn(async () => pack) }
