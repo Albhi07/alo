@@ -9,7 +9,7 @@ export function Header({ showSettings = true }: { showSettings?: boolean }) {
     <header className="sticky top-0 z-20 bg-navy text-white">
       <div className="mx-auto flex h-14 max-w-xl items-center gap-2 px-4">
         <Link to="/" className="flex min-h-tap items-center gap-2 text-xl font-semibold" aria-label={t('app.name')}>
-          <img src="/icon.svg" alt="" width="28" height="28" />
+          <img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" width="28" height="28" />
           <span>{t('app.name')}</span>
         </Link>
         <div className="ml-auto flex items-center gap-1">

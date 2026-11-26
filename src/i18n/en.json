@@ -1,7 +1,24 @@
 {
-  "app": { "name": "Alo", "tagline": "One lesson at a time", "skip": "Skip to main content" },
-  "nav": { "home": "Home", "subjects": "Subjects", "exam": "Exam", "focus": "Focus", "tutor": "Tutor", "settings": "Settings", "main": "Main navigation" },
-  "lang": { "toggle": "বাংলায় দেখুন", "short": "বাং", "bn": "বাংলা", "en": "English" },
+  "app": {
+    "name": "Alo",
+    "tagline": "One lesson at a time",
+    "skip": "Skip to main content"
+  },
+  "nav": {
+    "home": "Home",
+    "subjects": "Subjects",
+    "exam": "Exam",
+    "focus": "Focus",
+    "tutor": "Tutor",
+    "settings": "Settings",
+    "main": "Main navigation"
+  },
+  "lang": {
+    "toggle": "বাংলায় দেখুন",
+    "short": "বাং",
+    "bn": "বাংলা",
+    "en": "English"
+  },
   "net": {
     "offline": "You're offline. Keep studying; everything saves when you're back online.",
     "pending_one": "{{count}} change waiting to sync",
@@ -58,11 +75,23 @@
     "done": "Great! Your study space is ready."
   },
   "board": {
-    "dhaka": "Dhaka", "rajshahi": "Rajshahi", "chattogram": "Chattogram", "cumilla": "Cumilla",
-    "jashore": "Jashore", "barishal": "Barishal", "sylhet": "Sylhet", "dinajpur": "Dinajpur",
-    "mymensingh": "Mymensingh", "madrasah": "Madrasah", "technical": "Technical"
+    "dhaka": "Dhaka",
+    "rajshahi": "Rajshahi",
+    "chattogram": "Chattogram",
+    "cumilla": "Cumilla",
+    "jashore": "Jashore",
+    "barishal": "Barishal",
+    "sylhet": "Sylhet",
+    "dinajpur": "Dinajpur",
+    "mymensingh": "Mymensingh",
+    "madrasah": "Madrasah",
+    "technical": "Technical"
   },
-  "group": { "science": "Science", "business": "Business Studies", "humanities": "Humanities" },
+  "group": {
+    "science": "Science",
+    "business": "Business Studies",
+    "humanities": "Humanities"
+  },
   "home": {
     "hello": "Good day",
     "daysToFirst_one": "{{count}} day to your first paper",
@@ -86,9 +115,19 @@
     "mastery": "Mastery {{n}}%",
     "chaptersSoon": "Chapters are being added soon."
   },
-  "exam": { "title": "Exam centre", "soon": "Model tests and the routine are coming here.", "routine": "Exam routine" },
-  "focus": { "title": "Focus", "soon": "The Pomodoro timer is coming here." },
-  "tutor": { "title": "AI tutor", "soon": "A tutor you can ask questions is coming here. It needs internet." },
+  "exam": {
+    "title": "Exam centre",
+    "soon": "Model tests and the routine are coming here.",
+    "routine": "Exam routine"
+  },
+  "focus": {
+    "title": "Focus",
+    "soon": "The Pomodoro timer is coming here."
+  },
+  "tutor": {
+    "title": "AI tutor",
+    "soon": "A tutor you can ask questions is coming here. It needs internet."
+  },
   "settings": {
     "title": "Settings",
     "language": "App language",
@@ -116,6 +155,65 @@
     "resetConfirm": "Are you sure? All progress saved in guest mode will be erased.",
     "version": "Version {{v}}"
   },
-  "common": { "close": "Close", "cancel": "Cancel", "ok": "OK", "loading": "Loading…", "comingSoon": "Coming soon", "yes": "Yes", "no": "No" },
-  "notFound": { "title": "Page not found", "home": "Back to home" }
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "loading": "Loading…",
+    "comingSoon": "Coming soon",
+    "yes": "Yes",
+    "no": "No",
+    "percent": "{{n}}%"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "home": "Back to home"
+  },
+  "chapter": {
+    "number": "Chapter {{n}}",
+    "sections": "Chapter sections",
+    "tab": {
+      "learn": "Learn",
+      "mcq": "MCQ",
+      "cq": "CQ",
+      "board": "Board questions",
+      "notes": "Notes"
+    },
+    "lessonsN_one": "{{count}} lesson",
+    "lessonsN_other": "{{count}} lessons",
+    "mcqN_one": "{{count}} MCQ",
+    "mcqN_other": "{{count}} MCQs",
+    "boardN_one": "{{count}} board question",
+    "boardN_other": "{{count}} board questions",
+    "asked_one": "Asked {{count}} time in the last 5 years",
+    "asked_other": "Asked {{count}} times in the last 5 years",
+    "contentSoon": "Lessons for this chapter are coming soon.",
+    "offlineNotDownloaded": "This chapter isn't downloaded yet. Open it when you have internet.",
+    "minutes": "{{n}} min",
+    "start": "Start",
+    "practise": "Start practice",
+    "noLessons": "No lessons in this chapter yet.",
+    "noCq": "No creative questions in this chapter yet.",
+    "noBoard": "Board questions for this chapter are being added soon.",
+    "noNotes": "No notes for this chapter yet."
+  },
+  "mcq": {
+    "single": "Single answer",
+    "multi": "Multiple completion",
+    "situation": "Situation-based",
+    "correct": "Correct!",
+    "wrong": "Not this time. The answer is ({{label}}).",
+    "correctMark": "correct answer",
+    "wrongMark": "your answer, wrong"
+  },
+  "cq": {
+    "title": "Creative question {{n}}",
+    "marks": "{{n}} marks",
+    "reveal": "Show model answer",
+    "hide": "Hide model answer",
+    "writeFirst": "Write your answer on paper first, then compare.",
+    "modelFor": "({{part}}) Model answer",
+    "rubric": "How marks are given",
+    "points": "{{n}} mark(s):"
+  }
 }

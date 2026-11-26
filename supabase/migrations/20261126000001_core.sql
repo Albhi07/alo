@@ -72,6 +72,10 @@ $$;
 create or replace function public.protect_role() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
+  -- No end-user JWT (SQL editor, service role): trusted, e.g. promoting the first admin.
+  if auth.uid() is null then
+    return new;
+  end if;
   if tg_op = 'INSERT' and new.role = 'admin' and not public.is_admin() then
     new.role := 'student';
   elsif tg_op = 'UPDATE' and new.role is distinct from old.role and not public.is_admin() then

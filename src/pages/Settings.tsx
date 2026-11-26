@@ -23,7 +23,7 @@ export default function Settings() {
     if (!window.confirm(t('settings.resetConfirm'))) return
     await db.delete()
     localStorage.clear()
-    location.replace('/')
+    location.replace(import.meta.env.BASE_URL)
   }
 
   return (

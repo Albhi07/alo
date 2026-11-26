@@ -5,7 +5,11 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 import pkg from './package.json' with { type: 'json' }
 
+// BASE_PATH lets the same build run at / (production) or /alo/ (GitHub Pages preview).
+const base = process.env.BASE_PATH ?? '/'
+
 export default defineConfig({
+  base,
   define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   plugins: [
     react(),
@@ -22,8 +26,8 @@ export default defineConfig({
         background_color: '#14213d',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
-        scope: '/',
+        start_url: base,
+        scope: base,
         icons: [
           { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },
@@ -34,10 +38,16 @@ export default defineConfig({
         // App shell: all built JS/CSS/HTML plus Bengali+Latin font subsets.
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         // Sign-in and sync only run online, so supabase-js is fetched when needed.
-        globIgnores: ['**/supabase-*.js'],
-        navigateFallback: '/index.html',
+        globIgnores: ['**/supabase-*.js', '**/KaTeX_*'],
+        navigateFallback: `${base}index.html`,
         navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
+          {
+            // Maths fonts: fetched the first time a formula is shown, then kept.
+            urlPattern: /\/assets\/KaTeX_.*\.woff2$/,
+            handler: 'CacheFirst',
+            options: { cacheName: 'alo-katex-fonts', expiration: { maxEntries: 40 } },
+          },
           {
             // Lesson packs, audio and images downloaded on demand (M3).
             urlPattern: /\/content\//,

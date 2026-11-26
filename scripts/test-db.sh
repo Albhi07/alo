@@ -7,7 +7,7 @@ PGBIN=$(dirname "$(command -v initdb 2>/dev/null || ls -d /usr/lib/postgresql/*/
 TMP=$(mktemp -d)
 RUN_AS=""
 if [ "$(id -u)" = 0 ]; then chown -R postgres "$TMP"; RUN_AS="runuser -u postgres --"; fi
-$RUN_AS "$PGBIN/initdb" -D "$TMP/data" -A trust -U postgres >/dev/null
+$RUN_AS "$PGBIN/initdb" -D "$TMP/data" -A trust -U postgres -E UTF8 --locale=C.UTF-8 >/dev/null
 $RUN_AS "$PGBIN/pg_ctl" -D "$TMP/data" -o "-k $TMP -p 54329 -c listen_addresses=''" -l "$TMP/log" -w start >/dev/null
 trap '$RUN_AS "$PGBIN/pg_ctl" -D "$TMP/data" -m immediate stop >/dev/null; rm -rf "$TMP"' EXIT
 export PGOPTIONS="-c client_min_messages=warning"
