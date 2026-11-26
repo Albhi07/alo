@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { CqAnswer, QuestionRow } from '../../data/content-types'
 import { useT } from '../../i18n'
 import { Rich } from './Rich'
@@ -29,6 +30,7 @@ export function CqCard({ q, index }: { q: QuestionRow; index: number }) {
         {open ? t('cq.hide') : t('cq.reveal')}
       </button>
       {!open && <p className="text-sm text-muted">{t('cq.writeFirst')}</p>}
+      <Link to={`/tutor?q=${q.id}`} className="btn-link self-start text-sm">{t('cq.markWithTutor')}</Link>
       {open && (
         <div className="flex flex-col gap-4">
           {answers.map((a) => (
