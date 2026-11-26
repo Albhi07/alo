@@ -105,6 +105,10 @@ export function useChapters(subjectCode: string | undefined) {
   )
 }
 
+export function useAllChapters() {
+  return useLiveQuery(() => db.c_chapters.toArray(), [])
+}
+
 export function useChapter(id: string | undefined) {
   return useLiveQuery(() => (id ? db.c_chapters.get(id) : undefined), [id])
 }

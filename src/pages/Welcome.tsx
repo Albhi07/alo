@@ -17,6 +17,10 @@ export default function Welcome() {
         <p className="text-center text-sm text-muted">{t('welcome.guestNote')}</p>
         <Link to="/signin" className="btn-ghost">{t('welcome.signin')}</Link>
       </div>
+      <div className="flex flex-col items-center gap-1 text-sm">
+        <Link to="/parent" className="btn-link">{t('welcome.parent')}</Link>
+        <Link to="/teacher" className="btn-link">{t('welcome.teacher')}</Link>
+      </div>
     </div>
   )
 }

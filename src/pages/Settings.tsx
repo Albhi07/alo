@@ -82,6 +82,14 @@ export default function Settings() {
           : supabaseConfigured && <Link className="btn-ghost" to="/signin">{t('welcome.signin')}</Link>}
       </section>
 
+      <section className="card flex flex-col gap-2" aria-labelledby="people-h">
+        <h2 id="people-h" className="text-lg font-semibold">{t('people.settingsTitle')}</h2>
+        <p className="text-sm text-muted">{t('people.settingsHint')}</p>
+        <Link to="/connect" className="btn-ghost">{t('people.connectTitle')}</Link>
+        <Link to="/teacher" className="btn-link self-start text-sm">{t('people.teacherTitle')}</Link>
+        <Link to="/parent" className="btn-link self-start text-sm">{t('people.parentViewTitle')}</Link>
+      </section>
+
       <section className="card flex flex-col gap-2">
         <h2 className="text-lg font-semibold">{t('settings.install')}</h2>
         {installed ? <p>{t('settings.installed')}</p> : <p className="text-sm text-muted">{t('settings.installHint')}</p>}

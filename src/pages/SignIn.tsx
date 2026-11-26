@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import clsx from 'clsx'
 import { useT } from '../i18n'
 import { useOnline } from '../hooks/useOnline'
@@ -14,6 +14,9 @@ export default function SignIn() {
   const { t } = useT()
   const online = useOnline()
   const nav = useNavigate()
+  const [params] = useSearchParams()
+  // Only same-app paths: never redirect off-site.
+  const next = /^\/(parent|teacher|connect|tutor|admin)(\/[\w-]*)?$/.test(params.get('next') ?? '') ? params.get('next')! : null
   const [mode, setMode] = useState<Mode>('phone')
   const [value, setValue] = useState('')
   const [otp, setOtp] = useState('')
@@ -41,7 +44,7 @@ export default function SignIn() {
     } else {
       if (!/^\S+@\S+\.\S+$/.test(value.trim())) return setError(t('auth.invalidEmail'))
       setBusy(true)
-      const { error } = await sb.auth.signInWithOtp({ email: value.trim(), options: { emailRedirectTo: location.origin + import.meta.env.BASE_URL } })
+      const { error } = await sb.auth.signInWithOtp({ email: value.trim(), options: { emailRedirectTo: location.origin + import.meta.env.BASE_URL + (next ? next.slice(1) : '') } })
       setBusy(false)
       if (error) return setError(t('auth.error'))
       setSent(true)
@@ -58,7 +61,7 @@ export default function SignIn() {
     if (error || !data.user) return setError(t('auth.error'))
     await adoptGuestRows(data.user.id)
     const hasProfile = await db.profiles.count()
-    nav(hasProfile ? '/' : '/onboarding', { replace: true })
+    nav(next ?? (hasProfile ? '/' : '/onboarding'), { replace: true })
   }
 
   return (

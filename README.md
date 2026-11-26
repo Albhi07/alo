@@ -17,8 +17,8 @@ first-load JavaScript, lessons as narrated scenes instead of video.
 | M5 | Exam centre, timed mocks, readiness and predicted GPA | done |
 | M6 | Study plan, Focus timer, streaks, notices + web push | done |
 | M7 | AI tutor Edge Function, photo marking, rate limits | done |
-| M8 | Parent link, teacher dashboard, CSV export, analytics | next |
-| M9 | Performance, accessibility, Playwright e2e | |
+| M8 | Parent link, teacher dashboard, CSV export, analytics | done |
+| M9 | Performance, accessibility, Playwright e2e | next |
 
 ## Run it
 
@@ -83,6 +83,16 @@ https://albhi07.github.io/alo/ (Settings → Pages → Source must be "GitHub Ac
   `supabase/functions/_shared/tutor-logic.ts` and is unit-tested with the app.
   To switch it on: `supabase secrets set ANTHROPIC_API_KEY=...` (in your terminal, not in
   chat) and `supabase functions deploy tutor`.
+- **Parents and teachers** (`/connect` for students, `/parent`, `/teacher`): online only.
+  The student's own device publishes a small summary (streak, weekly focus minutes,
+  readiness per subject, predicted GPA range) to `student_summaries` after each sync;
+  linked parents and class teachers read that, never raw answers or tutor chats.
+  A parent links with a single-use 8-character code the student makes (valid 2 days,
+  10 tries a day). Students join a class with its code and a nickname; teachers see a
+  mastery heatmap and mock results (`class_overview`) and can download CSV.
+- **Analytics** (`/admin/analytics`): daily active students, lesson completion and
+  hardest questions from the `events` and `attempts` tables, aggregated in SQL
+  (`admin_analytics`, admins only).
 - **PWA**: vite-plugin-pwa precaches the app shell and the Bengali/Latin font subsets.
   supabase-js is excluded from precache and loaded only when needed.
 

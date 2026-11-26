@@ -37,6 +37,7 @@ export default function AdminHome() {
         ))}
       </ul>
       <Link to="/admin/import" className="btn-ghost">{t('admin.csvImport')}</Link>
+      <Link to="/admin/analytics" className="btn-ghost">{t('analytics.title')}</Link>
       {store.mode === 'local' && (
         <>
           <button className="btn-ghost" onClick={download}>{t('admin.export')}</button>
