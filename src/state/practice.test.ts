@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { readFileSync, readdirSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { db } from '../db'
 import { applyIndex, applyPack } from '../content/repo'
 import { buildQueue, computeMastery, recordMcqAnswer, dueCount } from './practice'
 import type { ChapterPack, QuestionRow } from '../data/content-types'
 
 const index = JSON.parse(readFileSync('public/content/index.json', 'utf8'))
-const pack: ChapterPack = JSON.parse(readFileSync(`public/content/chapters/${readdirSync('public/content/chapters').find((f) => f.endsWith('.bn.json') && JSON.parse(readFileSync(`public/content/chapters/${f}`, 'utf8')).questions.length > 0)}`, 'utf8'))
+const pack: ChapterPack = JSON.parse(readFileSync(`public/content/chapters/${'2fb8b926-5747-545d-9af6-82cb4940584c.bn.json' /* Mathematics: Algebraic expressions; the counts below are for this pack */}`, 'utf8'))
 const cid = pack.chapter_id
 const ans = (q: QuestionRow) => (q.answer_json as { index: number }).index
 

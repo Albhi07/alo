@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { readFileSync, readdirSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { db } from '../db'
 import { applyIndex, ensureChapter, refreshIndex } from './repo'
 import type { ContentSource } from './source'
 import type { ChapterPack, ContentIndex } from '../data/content-types'
 
 const index: ContentIndex = JSON.parse(readFileSync('public/content/index.json', 'utf8'))
-const packFile = readdirSync('public/content/chapters').find((f) => f.endsWith('.bn.json') && JSON.parse(readFileSync(`public/content/chapters/${f}`, 'utf8')).questions.length > 0)!
+const packFile = '2fb8b926-5747-545d-9af6-82cb4940584c.bn.json' /* Mathematics: Algebraic expressions; the counts below are for this pack */!
 const pack: ChapterPack = JSON.parse(readFileSync(`public/content/chapters/${packFile}`, 'utf8'))
 
 const source: ContentSource = { index: vi.fn(async () => index), chapterPack: vi.fn(async () => pack) }

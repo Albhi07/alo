@@ -8,6 +8,14 @@ import { cqs as algCqs } from './math-109/ch03-algebraic-expressions/cq'
 import { methodSheets as algMethod } from './math-109/ch03-algebraic-expressions/method'
 import { drills as algDrills } from './math-109/ch03-algebraic-expressions/drills'
 import { drills as motionDrills } from './physics-136/ch02-motion/drills'
+import { lesson as motionLesson } from './physics-136/ch02-motion/lesson'
+import { mcqs as motionMcqs } from './physics-136/ch02-motion/mcq'
+import { cqs as motionCqs } from './physics-136/ch02-motion/cq'
+import { methodSheets as motionMethod } from './physics-136/ch02-motion/method'
+import { lesson as safetyLesson } from './ict-154/ch02-computer-safety/lesson'
+import { mcqs as safetyMcqs } from './ict-154/ch02-computer-safety/mcq'
+import { cqs as safetyCqs } from './ict-154/ch02-computer-safety/cq'
+import { methodSheets as safetyMethod } from './ict-154/ch02-computer-safety/method'
 
 export interface ChapterContent {
   subject_code: string
@@ -21,7 +29,8 @@ export interface ChapterContent {
 
 export const CHAPTER_CONTENT: ChapterContent[] = [
   { subject_code: '109', number: 3, lessons: [algLesson], mcqs: algMcqs, cqs: algCqs, methodSheets: algMethod, drills: algDrills },
-  { subject_code: '136', number: 2, lessons: [], mcqs: [], cqs: [], methodSheets: [], drills: motionDrills },
+  { subject_code: '136', number: 2, lessons: [motionLesson], mcqs: motionMcqs, cqs: motionCqs, methodSheets: motionMethod, drills: motionDrills },
+  { subject_code: '154', number: 2, lessons: [safetyLesson], mcqs: safetyMcqs, cqs: safetyCqs, methodSheets: safetyMethod },
 ]
 
 export const MOCKS: MockSrc[] = [mathMock01]
