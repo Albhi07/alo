@@ -1,0 +1,48 @@
+name: Record narration
+# Records lesson narration with Google's neural voices and commits the audio to the branch.
+# Needs the repository secret GOOGLE_TTS_API_KEY. Only new or changed captions are recorded.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'm*']
+    paths: ['content/**', 'scripts/build-content.ts', 'scripts/tts-google.mjs']
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: voice-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for the key
+        id: key
+        env: { KEY: '${{ secrets.GOOGLE_TTS_API_KEY }}' }
+        run: |
+          if [ -z "$KEY" ]; then echo "::notice::GOOGLE_TTS_API_KEY is not set, nothing to record"; echo "ok=false" >> "$GITHUB_OUTPUT"; else echo "ok=true" >> "$GITHUB_OUTPUT"; fi
+      - if: steps.key.outputs.ok == 'true'
+        uses: actions/checkout@v4
+      - if: steps.key.outputs.ok == 'true'
+        uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - if: steps.key.outputs.ok == 'true'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg espeak-ng >/dev/null
+      - if: steps.key.outputs.ok == 'true'
+        run: npm ci
+      - if: steps.key.outputs.ok == 'true'
+        run: npx tsx scripts/build-content.ts
+        env:
+          GOOGLE_TTS_API_KEY: ${{ secrets.GOOGLE_TTS_API_KEY }}
+          TTS_VOICE_BN: ${{ vars.TTS_VOICE_BN }}
+          TTS_VOICE_EN: ${{ vars.TTS_VOICE_EN }}
+      - if: steps.key.outputs.ok == 'true'
+        name: Commit recordings and republish
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          git add -A public/content supabase/seed.sql
+          if git diff --cached --quiet; then echo "No new recordings"; exit 0; fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Record narration with the neural voice"
+          git push
+          gh workflow run pages.yml --ref "${GITHUB_REF_NAME}"

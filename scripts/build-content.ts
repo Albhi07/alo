@@ -70,17 +70,36 @@ function sceneBody(s: SceneSrc, m: M): SceneBody {
 const estSeconds = (text: string) => Math.max(8, Math.round(text.length / 13))
 
 // ---------------------------------------------------------------- narration audio
-// Placeholder narration: espeak-ng speech encoded as Opus, mono, 24 kbps (~3 KB per second).
-// Real recordings replace these through the admin CMS. Files are named by a hash of the
-// caption so a changed caption gets new audio, and unchanged audio is never rebuilt.
+// Narration audio, encoded as Opus, mono, 24 kbps (~3 KB per second).
+// With GOOGLE_TTS_API_KEY set, narration is recorded with Google's neural voices (TTS_VOICE_BN /
+// TTS_VOICE_EN override the defaults). Without it, existing Google recordings are reused and only
+// scenes that have none fall back to espeak-ng as a placeholder. Files are named by a hash of the
+// caption (and voice) so a changed caption gets new audio, and unchanged audio is never rebuilt.
 const AUDIO_DIR = 'public/content/audio'
 const hasTool = (cmd: string, flag = '--version') => { try { execFileSync(cmd, [flag], { stdio: 'ignore' }); return true } catch { return false } }
 const CAN_TTS = hasTool('espeak-ng') && hasTool('ffmpeg', '-version')
 if (!CAN_TTS) console.warn('espeak-ng/ffmpeg not found: keeping existing audio, new scenes get none')
+const GOOGLE = !!process.env.GOOGLE_TTS_API_KEY && hasTool('ffmpeg', '-version')
+const VOICE: Record<M, string> = {
+  bn: process.env.TTS_VOICE_BN || 'bn-IN-Chirp3-HD-Aoede',
+  en: process.env.TTS_VOICE_EN || 'en-IN-Chirp3-HD-Aoede',
+}
+let googleCount = 0
 const usedAudio = new Set<string>()
 
 function narrationAudio(lessonId: string, idx: number, text: string, m: M): { path: string; seconds: number; bytes: number } | null {
-  const rel = `${lessonId}/${idx}-${hash(m + text).slice(0, 8)}.opus`
+  const neuralRel = `${lessonId}/${idx}-g${hash(VOICE[m] + m + text).slice(0, 8)}.opus`
+  const neuralFile = `${AUDIO_DIR}/${neuralRel}`
+  if (!existsSync(neuralFile) && GOOGLE) {
+    mkdirSync(`${AUDIO_DIR}/${lessonId}`, { recursive: true })
+    const wav = `${neuralFile}.wav`
+    execFileSync(process.execPath, ['scripts/tts-google.mjs', VOICE[m], wav], { input: text, stdio: ['pipe', 'inherit', 'inherit'] })
+    execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', wav, '-ac', '1', '-ar', '24000', '-c:a', 'libopus', '-b:a', '24k', '-application', 'voip', neuralFile])
+    rmSync(wav)
+    googleCount++
+  }
+  const useNeural = existsSync(neuralFile)
+  const rel = useNeural ? neuralRel : `${lessonId}/${idx}-${hash(m + text).slice(0, 8)}.opus`
   const file = `${AUDIO_DIR}/${rel}`
   if (!existsSync(file)) {
     if (!CAN_TTS) return null
@@ -284,6 +303,7 @@ sql += 'commit;\n'
 writeFileSync('supabase/seed.sql', sql)
 
 for (const mk of mockIndex) console.log(`  mock ${mk.title} (${mk.medium}): ${mk.mcq} MCQ, ${mk.cq} CQ, ${(mk.bytes / 1024).toFixed(1)} KB`)
+if (GOOGLE) console.log(`neural voice: ${googleCount} new recordings (${VOICE.bn}, ${VOICE.en})`)
 console.log(`subjects ${SUBJECTS.length}, chapters ${chapters.length}, packs ${packs.length}, lessons ${allLessons.length}, questions ${packs.reduce((t, p) => t + p.questions.length, 0)}`)
 for (const p of packs) {
   const audio = p.lessons.reduce((t, l) => t + l.size_bytes, 0)
